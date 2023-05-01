@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e2bf3b0e-deb6-4d91-8eb4-fb48168c7015}</ProjectGuid>
+    <RootNamespace>TCDR</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BasicMemoryInterface.cpp" />
+    <ClCompile Include="DriverInterop.cpp" />
+    <ClCompile Include="EFTCamera.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="GameWorld.cpp" />
+    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="IMemoryInterface.cpp" />
+    <ClCompile Include="InventoryController.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemTemplate.cpp" />
+    <ClCompile Include="ListNode.cpp" />
+    <ClCompile Include="Offsets.cpp" />
+    <ClCompile Include="Overlay.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Hacks.cpp" />
+    <ClCompile Include="ProfileInfo.cpp" />
+    <ClCompile Include="ProfileSettings.cpp" />
+    <ClCompile Include="rlImGui.cpp" />
+    <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="Slot.cpp" />
+    <ClCompile Include="TCDR.cpp" />
+    <ClCompile Include="TestOverlay.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WinWrapper.cpp" />
+    <ClCompile Include="WorldLootItem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BaseObject.hpp" />
+    <ClInclude Include="BasicMemoryInterface.h" />
+    <ClInclude Include="Bones.hpp" />
+    <ClInclude Include="DriverInterop.h" />
+    <ClInclude Include="EFTCamera.hpp" />
+    <ClInclude Include="EquipmentSlot.hpp" />
+    <ClInclude Include="GameObjectManager.hpp" />
+    <ClInclude Include="GameWorld.hpp" />
+    <ClInclude Include="Global.hpp" />
+    <ClInclude Include="IMemoryInterface.h" />
+    <ClInclude Include="InventoryController.hpp" />
+    <ClInclude Include="Item.hpp" />
+    <ClInclude Include="ItemTemplate.hpp" />
+    <ClInclude Include="ListNode.hpp" />
+    <ClInclude Include="Offsets.hpp" />
+    <ClInclude Include="Overlay.h" />
+    <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Hacks.hpp" />
+    <ClInclude Include="ProfileInfo.hpp" />
+    <ClInclude Include="ProfileSettings.hpp" />
+    <ClInclude Include="rlImGui.h" />
+    <ClInclude Include="Settings.hpp" />
+    <ClInclude Include="Slot.hpp" />
+    <ClInclude Include="TestOverlay.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="WinWrapper.h" />
+    <ClInclude Include="WorldLootItem.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
