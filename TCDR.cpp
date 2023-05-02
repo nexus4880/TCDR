@@ -5,7 +5,7 @@
 #include "DriverInterop.h"
 #include "Global.hpp"
 
-#define USE_DRIVER 0
+#define USE_DRIVER 1
 
 #ifdef _DEBUG
 int main()
@@ -13,7 +13,7 @@ int main()
 unsigned long WinMain()
 #endif
 {
-#if USE_DRIVER
+#if !defined(_DEBUG) || USE_DRIVER
 	printf_s("Attempting to interop with driver\n");
 	DriverInterop driverInterop{};
 	Global::pMemoryInterface = &driverInterop;
