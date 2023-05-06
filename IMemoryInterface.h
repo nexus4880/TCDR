@@ -76,5 +76,5 @@ namespace Memory {
         return std::tuple<int, T*>{length, buffer};
     }
 
-    wchar_t* ReadString(IMemoryInterface* pMemoryInterface, intptr_t address);
+    wchar_t* ReadString(IMemoryInterface* pMemoryInterface, intptr_t address, bool sanitize = true);
 }

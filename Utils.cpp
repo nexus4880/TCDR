@@ -74,11 +74,11 @@ namespace Utils {
             case 16:
             case 30:
             {
-                return L"Goon";
+                return L"Minion";
             }
             case 0:
             {
-                return L"Marksman";
+                return L"Sniper";
             }
             case 1:
             {
@@ -118,7 +118,7 @@ namespace Utils {
             }
             case 20:
             {
-                return L"Sectant";
+                return L"Cultist";
             }
             case 21:
             {
@@ -155,5 +155,13 @@ namespace Utils {
         }
 
         return L"Unknown";
+    }
+
+    bool IsValidWChar(wchar_t value) {
+        return
+            value >= 48 && value <= 57 || // 0-9
+            value >= 65 && value <= 90 || // A-Z
+            value >= 97 && value <= 122 ||  // a-z
+            value == L'-' || value == L'_'; // only special characters I know of that can be used
     }
 }

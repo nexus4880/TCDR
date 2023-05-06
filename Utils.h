@@ -11,4 +11,5 @@ namespace Utils {
 	float LerpF(float a, float b, float t);
 	std::string WCharToString(const wchar_t* text);
 	const wchar_t* GetRoleName(int role);
+	bool IsValidWChar(wchar_t value);
 }

@@ -132,7 +132,7 @@ Vector3 Player::GetBone(EBone bone) {
 	return GetPositionFromTransform(boneAddress);
 }
 
-void Player::DrawBones() {
+void Player::DrawBones(ProfileInfo& relativeInfo) {
 	std::map<EBone, Vector3> boneWorldToScreens{};
 	for (int i = 0; i < BONE_PATH_SIZE; i++) {
 		std::array<EBone, 2> path = Player::drawPaths[i];
@@ -167,7 +167,7 @@ void Player::DrawBones() {
 			static_cast<int>(first.y),
 			static_cast<int>(second.x),
 			static_cast<int>(second.y),
-			this->GetColor(ProfileInfo{0})
+			this->GetColor(relativeInfo)
 		);
 	}
 }

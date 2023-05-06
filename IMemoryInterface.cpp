@@ -1,7 +1,8 @@
 #include "IMemoryInterface.h"
+#include "Utils.h"
 
 namespace Memory {
-    wchar_t* Memory::ReadString(IMemoryInterface* pMemoryInterface, intptr_t address) {
+    wchar_t* Memory::ReadString(IMemoryInterface* pMemoryInterface, intptr_t address, bool sanitize) {
         if (!address || address < MINIMUM_ADDRESS_SIZE) {
             return nullptr;
         }
@@ -17,9 +18,11 @@ namespace Memory {
             return nullptr;
         }
 
-        for (int i = 0; i < stringLength; i++) {
-            if (!(buffer[i] < 0x0400 || (buffer[i] >= 0x0500 && buffer[i] < 0x4E00) || buffer[i] > 0x9FFF)) {
-                buffer[i] = L'?';
+        if (sanitize) {
+            for (int i = 0; i < stringLength; i++) {
+                if (!Utils::IsValidWChar(buffer[i])) {
+                    buffer[i] = L'?';
+                }
             }
         }
 

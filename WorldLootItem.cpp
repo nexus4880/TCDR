@@ -12,8 +12,32 @@ bool WorldLootItem::IsContainer() {
 
 Vector3 WorldLootItem::GetPosition() {
 	if (!this->cachedTransformAddress) {
-		this->cachedTransformAddress = Memory::ReadChain<intptr_t>(Global::pMemoryInterface, this->address, {0x10, 0x30, 0x28, 0x90});
+		this->cachedTransformAddress = Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x10);
 	}
 
-	return Memory::ReadValue<Vector3>(Global::pMemoryInterface, this->cachedTransformAddress + 0x3A0);
+	return Memory::ReadValue<Vector3>(Global::pMemoryInterface, this->cachedTransformAddress + 0xA90);
+}
+
+std::optional<std::wstring> WorldLootItem::GetId() {
+	if (!this->cachedId.has_value()) {
+		wchar_t* readString = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x68));
+		if (readString) {
+			this->cachedId = readString;
+		}
+		else {
+			this->cachedId = std::nullopt;
+		}
+	}
+
+	return this->cachedId;
+}
+
+std::optional<std::wstring> WorldLootItem::GetLocalizedName() {
+	if (!this->cachedLocalizedName.has_value()) {
+		if (this->GetId().has_value()) {
+			this->cachedLocalizedName = Global::itemTemplates[this->GetId().value()];
+		}
+	}
+
+	return this->cachedLocalizedName;
 }
