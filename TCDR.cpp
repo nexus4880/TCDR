@@ -4,6 +4,7 @@
 #include "TestOverlay.h"
 #include "DriverInterop.h"
 #include "Global.hpp"
+#include <numeric>
 
 #define USE_DRIVER 1
 
