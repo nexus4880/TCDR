@@ -217,7 +217,7 @@ namespace Hacks {
 				continue;
 			}
 
-			players[i].DrawBones();
+			players[i].DrawBones(localPlayerInfo);
 		}
 	}
 	
