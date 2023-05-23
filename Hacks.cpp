@@ -159,6 +159,8 @@ namespace Hacks {
 				}
 			}
 
+			float test = distance / Global::pSettings->skeletonESP.distance;
+			test = -test + 1.f;
 
 			stream << std::format("[{:0.0f}m]", distance).c_str();
 			// Convert stream from wchar_t* to char* for raylib
@@ -167,19 +169,24 @@ namespace Hacks {
 			char* buffer = new char[bufferSize];
 			wcstombs_s(nullptr, buffer, bufferSize, str.c_str(), str.size());
 			Vector2 textSize = MeasureTextEx(GetFontDefault(), buffer, 1.f, 4.5f);
-			DrawText(
-				buffer,
-				static_cast<int>(screenPosition.x - textSize.x * 0.5f),
-				static_cast<int>(screenPosition.y - textSize.y * 0.5f),
-				1,
-				color
-			);
+			if (Global::pSettings->skeletonESP.distance > distance)
+				DrawText(buffer,static_cast<int>(screenPosition.x - textSize.x * 0.5f),static_cast<int>(screenPosition.y - textSize.y * 0.5f),1, ColorAlpha(player.GetColor(localPlayerInfo), test));
+			else if(isInImportantRange)
+				DrawText(buffer, static_cast<int>(screenPosition.x - textSize.x * 0.5f), static_cast<int>(screenPosition.y - textSize.y * 0.5f), 1, ColorAlpha(player.GetColor(localPlayerInfo), .375f));
+			else
+				DrawText(buffer, static_cast<int>(screenPosition.x - textSize.x * 0.5f), static_cast<int>(screenPosition.y - textSize.y * 0.5f), 1, ColorAlpha(player.GetColor(localPlayerInfo), 0.15f));
 
 			delete[] buffer;
 			if (Global::pSettings->snapLines.activeMode > 0) {
 				if (info.IsPlayer()) {
-					if (Global::pSettings->snapLines.types[0]) {
-						DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, player.GetColor(localPlayerInfo));
+					if (Global::pSettings->snapLines.types[0])
+					{
+						if(!(Global::pSettings->skeletonESP.distance < distance) && !isInImportantRange)
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo),test));
+						else if (isInImportantRange)
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), 0.1f));
+						else
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), 0.1f));
 					}
 				}
 				else if (info.IsBoss()) {
@@ -188,8 +195,14 @@ namespace Hacks {
 					}
 				}
 				else {
-					if (Global::pSettings->snapLines.types[2]) {
-						DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, player.GetColor(localPlayerInfo));
+					if (Global::pSettings->snapLines.types[2])
+					{
+						if (!(Global::pSettings->skeletonESP.distance < distance) && !isInImportantRange)
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), test));
+						else if(isInImportantRange)
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), 0.1f));
+						else
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), 0.1f));
 					}
 				}
 			}
@@ -202,7 +215,7 @@ namespace Hacks {
 		if (playerCount <= 1) {
 			return;
 		}
-
+		unsigned char temp = 255;
 		Vector3 localPlayerPosition = players[0].GetPosition();
 		ProfileInfo localPlayerInfo = players[0].GetProfileInfo();
 		for (int i = 1; i < playerCount; i++) {
@@ -213,11 +226,18 @@ namespace Hacks {
 			}
 
 			float distance = Vector3Distance(localPlayerPosition, worldPosition);
-			if (distance > Global::pSettings->skeletonESP.distance) {
-				continue;
+
+			if (distance > Global::pSettings->skeletonESP.distance) 
+			{
+				temp = 135;
+				if ((distance*2.f) > Global::pSettings->skeletonESP.distance)
+				{
+					continue;
+				}
+
 			}
 
-			players[i].DrawBones(localPlayerInfo);
+			players[i].DrawBones(temp, localPlayerInfo);
 		}
 	}
 	

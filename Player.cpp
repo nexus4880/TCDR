@@ -7,6 +7,8 @@
 
 struct transform_access_read_only_t {
 	uint64_t transform_data{};
+	uint64_t data;
+	int index;
 };
 
 struct transform_data_t {
@@ -23,11 +25,12 @@ struct matrix34_t {
 Vector3 GetPositionFromTransform(intptr_t transform) {
 	__m128 result{};
 
-	const __m128 mulVec0 = {-2.000, 2.000, -2.000, 0.000};
-	const __m128 mulVec1 = {2.000, -2.000, -2.000, 0.000};
-	const __m128 mulVec2 = {-2.000, -2.000, 2.000, 0.000};
+	const __m128 mulVec0 = { -2.000, 2.000, -2.000, 0.000 };
+	const __m128 mulVec1 = { 2.000, -2.000, -2.000, 0.000 };
+	const __m128 mulVec2 = { -2.000, -2.000, 2.000, 0.000 };
 
 	transform_access_read_only_t pTransformAccessReadOnly = Memory::ReadValue<transform_access_read_only_t>(Global::pMemoryInterface, transform + 0x38);
+	//pTransformAccessReadOnly.index
 	unsigned int index = Memory::ReadValue<unsigned int>(Global::pMemoryInterface, transform + 0x40);
 	transform_data_t transformData = Memory::ReadValue<transform_data_t>(Global::pMemoryInterface, pTransformAccessReadOnly.transform_data + 0x18);
 
@@ -99,10 +102,10 @@ intptr_t Player::GetSkeletonTransformListValues() {
 		this->cachedEFTPlayerClassAddress = Memory::ReadChain<intptr_t>(
 			Global::pMemoryInterface,
 			this->address,
-			{0xA8, 0x28, 0x28, 0x10}
+			{ 0xA8, 0x28, 0x28, 0x10 }
 		);
 	}
-	
+
 	return this->cachedEFTPlayerClassAddress;
 }
 
@@ -112,11 +115,11 @@ Vector3 Player::GetPosition() {
 		this->cachedTransformAddress = Memory::ReadChain<intptr_t>(
 			Global::pMemoryInterface,
 			this->GetSkeletonTransformListValues(),
-			{0x20, 0x10}
+			{ 0x20, 0x10 }
 		);
 	}
 
-	return this->cachedTransformAddress ? GetPositionFromTransform(this->cachedTransformAddress) : Vector3{0.f, 0.f, 0.f};
+	return this->cachedTransformAddress ? GetPositionFromTransform(this->cachedTransformAddress) : Vector3{ 0.f, 0.f, 0.f };
 }
 
 Vector3 Player::GetBone(EBone bone) {
@@ -132,7 +135,7 @@ Vector3 Player::GetBone(EBone bone) {
 	return GetPositionFromTransform(boneAddress);
 }
 
-void Player::DrawBones(ProfileInfo& relativeInfo) {
+void Player::DrawBones(unsigned char alpha, ProfileInfo& localPlayerInfo) {
 	std::map<EBone, Vector3> boneWorldToScreens{};
 	for (int i = 0; i < BONE_PATH_SIZE; i++) {
 		std::array<EBone, 2> path = Player::drawPaths[i];
@@ -161,14 +164,9 @@ void Player::DrawBones(ProfileInfo& relativeInfo) {
 		if (second.x == 0.f || second.y == 0.f || second.z <= 0.01f) {
 			continue;
 		}
-
-		DrawLine(
-			static_cast<int>(first.x),
-			static_cast<int>(first.y),
-			static_cast<int>(second.x),
-			static_cast<int>(second.y),
-			this->GetColor(relativeInfo)
-		);
+		Color temp = this->GetColor(localPlayerInfo);
+		temp.a = alpha;
+		DrawLine(static_cast<int>(first.x), static_cast<int>(first.y), static_cast<int>(second.x), static_cast<int>(second.y), temp);
 	}
 }
 
@@ -179,28 +177,28 @@ Color Player::GetColor(ProfileInfo inRelationTo) {
 		const wchar_t* relativeId = inRelationTo.GetGroupID();
 		if (!relativeId || !playerGroupId || (wcscmp(relativeId, playerGroupId) != 0)) {
 			switch (info.GetSide()) {
-				case 1:
-				{
-					this->cachedColor = YELLOW;
-					break;
-				}
-				case 2:
-				{
-					this->cachedColor = RED;
-					break;
-				}
-				case 4:
-				{
-					this->cachedColor = info.IsPlayer() ? DARKBLUE : SKYBLUE;
-					break;
-				}
+			case 1:
+			{
+				this->cachedColor = YELLOW;
+				break;
+			}
+			case 2:
+			{
+				this->cachedColor = RED;
+				break;
+			}
+			case 4:
+			{
+				this->cachedColor = info.IsPlayer() ? DARKBLUE : SKYBLUE;
+				break;
+			}
 			}
 		}
 		else {
 			this->cachedColor = GREEN;
 		}
 	}
-	
+
 	return cachedColor.value();
 }
 
@@ -218,5 +216,5 @@ InventoryController Player::GetInventoryController() {
 }
 
 Item Player::GetActiveWeapon() {
-	return Item{Memory::ReadChain<intptr_t>(Global::pMemoryInterface, this->address, {0x570, 0x60})};
+	return Item{ Memory::ReadChain<intptr_t>(Global::pMemoryInterface, this->address, {0x570, 0x60}) };
 }

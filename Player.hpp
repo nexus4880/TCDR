@@ -19,7 +19,7 @@ public:
 	intptr_t GetSkeletonTransformListValues();
 	Vector3 GetPosition();
 	Vector3 GetBone(EBone bone);
-	void DrawBones(ProfileInfo& relativeInfo);
+	void DrawBones(unsigned char alpha, ProfileInfo& localPlayerInfo);
 	Color GetColor(ProfileInfo inRelationTo);
 	InventoryController GetInventoryController();
 	Item GetActiveWeapon();
