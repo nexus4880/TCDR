@@ -19,11 +19,13 @@ public:
 	intptr_t GetSkeletonTransformListValues();
 	Vector3 GetPosition();
 	Vector3 GetBone(EBone bone);
-	void DrawBones(unsigned char alpha, ProfileInfo& localPlayerInfo);
+	void DrawBones(float alpha, ProfileInfo& localPlayerInfo);
 	Color GetColor(ProfileInfo inRelationTo);
 	InventoryController GetInventoryController();
 	Item GetActiveWeapon();
-
+	float distance;
+	float distance2d;
+	bool isInImportantRange;
 	intptr_t address;
 
 private:

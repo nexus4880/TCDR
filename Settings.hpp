@@ -22,7 +22,7 @@ struct Settings {
 	struct SkeletonESP {
 		float distance = 100.f;
 		float closeFOV = 100.f;
-		float farFOV = 100.f;
+		int entities = 10;
 	};
 
 	struct Keybinds {

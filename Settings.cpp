@@ -56,7 +56,7 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
 
     settings.skeletonESP.distance = json["skeletonESP"]["distance"];
     settings.skeletonESP.closeFOV = json["skeletonESP"]["closeFOV"];
-    settings.skeletonESP.farFOV = json["skeletonESP"]["farFOV"];
+    settings.skeletonESP.entities = json["skeletonESP"]["entities"];
 
     settings.keybinds.toggleNoRecoil = json["keybinds"]["toggleNoRecoil"];
 
@@ -87,7 +87,7 @@ void Settings::Serialize() {
 
     jsonSettings["skeletonESP"]["distance"] = this->skeletonESP.distance;
     jsonSettings["skeletonESP"]["closeFOV"] = this->skeletonESP.closeFOV;
-    jsonSettings["skeletonESP"]["farFOV"] = this->skeletonESP.farFOV;
+    jsonSettings["skeletonESP"]["entities"] = this->skeletonESP.entities;
 
     jsonSettings["keybinds"]["toggleNoRecoil"] = this->keybinds.toggleNoRecoil;
 

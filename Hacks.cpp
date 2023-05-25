@@ -93,8 +93,8 @@ namespace Hacks {
 			}
 
 			if (ImGui::CollapsingHeader("Skeleton")) {
-				ImGui::DragFloat("Close FOV", &Global::pSettings->skeletonESP.closeFOV);
-				ImGui::DragFloat("Far FOV", &Global::pSettings->skeletonESP.farFOV);
+				//ImGui::DragFloat("Close FOV", &Global::pSettings->skeletonESP.closeFOV);
+				ImGui::DragInt("Max Entities", &Global::pSettings->skeletonESP.entities, 1.0f, 1, Global::gameWorld.GetPlayers().size());
 				ImGui::DragFloat("Max Distance", &Global::pSettings->skeletonESP.distance);
 			}
 		}
@@ -108,7 +108,7 @@ namespace Hacks {
 		}
 
 		Vector3 localPlayerPosition = players[0].GetPosition();
-		ProfileInfo localPlayerInfo = players[0].GetProfileInfo();
+		ProfileInfo& localPlayerInfo = players[0].GetProfileInfo();
 		for (int i = 1; i < playerCount; i++) {
 			Player& player = players[i];
 			ProfileInfo info = player.GetProfileInfo();
@@ -208,37 +208,79 @@ namespace Hacks {
 			}
 		}
 	}
+	bool IsCloser(const Player& d1, const Player& d2)
+	{
+		if ((d1.distance < d2.distance) && (d1.distance2d < d2.distance2d) && d1.isInImportantRange)//dude is basically touching you and infront of your mouse
+			return true;
+		else if (d1.distance2d < d2.distance2d && d1.isInImportantRange)//prio inside of mouse range
+			return true;
+		else if (d1.distance < d2.distance && !d1.isInImportantRange)//closer but not in range this |!d1.isInImportantRange| may be a sanity check tbh
+			return true;
+		return false;
+	}
 
-	void DrawSkeletonESP() {
+	void DrawSkeletonESP() 
+	{
 		std::vector<Player>& players = Global::gameWorld.GetPlayers();
+		std::vector<Player> playerssorted {};
 		int playerCount = players.size();
-		if (playerCount <= 1) {
+
+		if (playerCount <= 1) 
+		{
 			return;
 		}
-		unsigned char temp = 255;
+
+		float temp = 1.f;
 		Vector3 localPlayerPosition = players[0].GetPosition();
-		ProfileInfo localPlayerInfo = players[0].GetProfileInfo();
-		for (int i = 1; i < playerCount; i++) {
+		ProfileInfo& localPlayerInfo = players[0].GetProfileInfo();
+
+		for (int i = 1; i < playerCount; i++) 
+		{
 			Vector3 worldPosition = players[i].GetPosition();
 			Vector3 screenPosition = Global::activeCamera.WorldToScreen(worldPosition);
-			if (screenPosition.z < 0.01f) {
+			if (screenPosition.z < 0.1f)
+			{
 				continue;
 			}
 
+			/*
+			//small issue with height if close to you and the center of vector2distance being the base of player
+			i tried to move it up with screenpos.y+=3.f all the way to 30.f nothing changed helpppppp
+			*/
+
+			players[i].isInImportantRange = Vector2Distance(Global::centerScreen, *(Vector2*)&screenPosition) < Global::pSettings->importantRadius;
+
 			float distance = Vector3Distance(localPlayerPosition, worldPosition);
+			players[i].distance = distance;
+			players[i].distance2d = Vector2Distance(Global::centerScreen, *(Vector2*)&screenPosition);
 
-			if (distance > Global::pSettings->skeletonESP.distance) 
+			if (distance > Global::pSettings->skeletonESP.distance) //if too far don't add to list
 			{
-				temp = 135;
-				if ((distance*2.f) > Global::pSettings->skeletonESP.distance)
-				{
-					continue;
-				}
-
+				continue;
 			}
 
-			players[i].DrawBones(temp, localPlayerInfo);
+			playerssorted.push_back(players[i]);//making list of good entities
+
 		}
+
+
+
+		std::sort(playerssorted.begin(), playerssorted.end(),IsCloser);//now we have absolute closest players 
+
+		if (players.size() < Global::pSettings->skeletonESP.entities)//size sanity check
+			Global::pSettings->skeletonESP.entities = players.size();
+		int ent = Global::pSettings->skeletonESP.entities;
+		if (Global::pSettings->skeletonESP.entities > playerssorted.size())
+			ent = playerssorted.size();
+
+		for (int i = 0; i < ent; ++i)
+		{
+
+			if (!playerssorted[i].address)
+				break;
+			playerssorted[i].DrawBones(temp, localPlayerInfo);
+		}
+		playerssorted.clear();
 	}
 	
 	void DrawLootESP() {

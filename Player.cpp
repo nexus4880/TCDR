@@ -135,7 +135,7 @@ Vector3 Player::GetBone(EBone bone) {
 	return GetPositionFromTransform(boneAddress);
 }
 
-void Player::DrawBones(unsigned char alpha, ProfileInfo& localPlayerInfo) {
+void Player::DrawBones(float alpha, ProfileInfo& localPlayerInfo) {
 	std::map<EBone, Vector3> boneWorldToScreens{};
 	for (int i = 0; i < BONE_PATH_SIZE; i++) {
 		std::array<EBone, 2> path = Player::drawPaths[i];
@@ -164,9 +164,7 @@ void Player::DrawBones(unsigned char alpha, ProfileInfo& localPlayerInfo) {
 		if (second.x == 0.f || second.y == 0.f || second.z <= 0.01f) {
 			continue;
 		}
-		Color temp = this->GetColor(localPlayerInfo);
-		temp.a = alpha;
-		DrawLine(static_cast<int>(first.x), static_cast<int>(first.y), static_cast<int>(second.x), static_cast<int>(second.y), temp);
+		DrawLine(static_cast<int>(first.x), static_cast<int>(first.y), static_cast<int>(second.x), static_cast<int>(second.y), ColorAlpha(this->GetColor(localPlayerInfo), alpha));
 	}
 }
 

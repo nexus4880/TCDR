@@ -177,7 +177,7 @@ void TestOverlay::DrawImGui() {
 
 		ImGui::DragFloat("Polling Rate", &Global::pSettings->updateRate, 0.01f, 0.f, 5.f);
 		ImGui::Checkbox("Show FPS", &Global::pSettings->showFPS);
-		if (ImGui::CollapsingHeader("Important Radius")) {
+		if (ImGui::CollapsingHeader("FOV")) {
 			ImGui::Checkbox("Visualize", &Global::pSettings->visualizeImportantRadius);
 			ImGui::DragFloat("Value", &Global::pSettings->importantRadius);
 		}
