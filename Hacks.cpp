@@ -160,7 +160,9 @@ namespace Hacks {
 			}
 
 			float test = distance / Global::pSettings->skeletonESP.distance;
-			test = -test + 1.f;
+			test = -test + 1.1f;
+			if (test > 1.f)
+				test = 1.f;
 
 			stream << std::format("[{:0.0f}m]", distance).c_str();
 			// Convert stream from wchar_t* to char* for raylib
