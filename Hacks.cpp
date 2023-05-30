@@ -193,14 +193,14 @@ namespace Hacks {
 				}
 				else if (info.IsBoss()) {
 					if (Global::pSettings->snapLines.types[1]) {
-						DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, player.GetColor(localPlayerInfo));
+						DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(ORANGE,.5f));
 					}
 				}
 				else {
 					if (Global::pSettings->snapLines.types[2])
 					{
 						if (!(Global::pSettings->skeletonESP.distance < distance) && !isInImportantRange)
-							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), test));
+							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), test/2));
 						else if(isInImportantRange)
 							DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition, ColorAlpha(player.GetColor(localPlayerInfo), 0.1f));
 						else
@@ -265,8 +265,6 @@ namespace Hacks {
 
 		}
 
-
-
 		std::sort(playerssorted.begin(), playerssorted.end(),IsCloser);//now we have absolute closest players 
 
 		if (players.size() < Global::pSettings->skeletonESP.entities)//size sanity check
@@ -277,12 +275,14 @@ namespace Hacks {
 
 		for (int i = 0; i < ent; ++i)
 		{
-
 			if (!playerssorted[i].address)
 				break;
+			if (temp <= 0.f)
+				break;
 			playerssorted[i].DrawBones(temp, localPlayerInfo);
+			
+			temp -= (1.f/ent);
 		}
-		playerssorted.clear();
 	}
 	
 	void DrawLootESP() {
