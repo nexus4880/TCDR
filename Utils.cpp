@@ -164,4 +164,16 @@ namespace Utils {
             value >= 97 && value <= 122 ||  // a-z
             value == L'-' || value == L'_'; // only special characters I know of that can be used
     }
+
+    unsigned int HashString(const std::string& input) {
+        const unsigned int FNV_PRIME = 16777619;
+        const unsigned int OFFSET_BASIS = 2166136261;
+        unsigned int hash = OFFSET_BASIS;
+        for (char c : input) {
+            hash ^= static_cast<unsigned int>(c);
+            hash *= FNV_PRIME;
+        }
+
+        return hash;
+    }
 }

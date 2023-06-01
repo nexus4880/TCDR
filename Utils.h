@@ -12,4 +12,5 @@ namespace Utils {
 	std::string WCharToString(const wchar_t* text);
 	const wchar_t* GetRoleName(int role);
 	bool IsValidWChar(wchar_t value);
+	unsigned int HashString(const std::string& input);
 }
