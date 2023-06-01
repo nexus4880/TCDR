@@ -13,6 +13,9 @@
         } \
     })()
 
+#define SET_JSON_VALUE(jobj, path, value) \
+    jobj path = value
+
 Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) {
     if (hasErrorOccurred) {
         *hasErrorOccurred = false;
@@ -51,8 +54,8 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
 
     settings.showFPS = TRY_READ(bool, json, ["showFPS"]);
     settings.visualizeImportantRadius = TRY_READ(bool, json, ["visualizeImportantRadius"]);
-    settings.importantRadius = TRY_READ(float, json, ["visualizeImportantRadius"]);
-    settings.updateRate = TRY_READ(float, json, ["visualizeImportantRadius"]);
+    settings.importantRadius = TRY_READ(float, json, ["importantRadius"]);
+    settings.updateRate = TRY_READ(float, json, ["updateRate"]);
 
     settings.noRecoil.enabled = TRY_READ(bool, json, ["noRecoil"]["enabled"]);
     settings.noRecoil.shootinggIntensity = TRY_READ(float, json, ["noRecoil"]["shootinggIntensity"]);
@@ -83,35 +86,35 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
 void Settings::Serialize() {
     nlohmann::json jsonSettings;
 
-    jsonSettings["showFPS"] = this->showFPS;
+    SET_JSON_VALUE(jsonSettings, ["showFPS"], this->showFPS);
 
-    jsonSettings["visualizeImportantRadius"] = this->visualizeImportantRadius;
-    jsonSettings["importantRadius"] = this->importantRadius;
+    SET_JSON_VALUE(jsonSettings, ["visualizeImportantRadius"], this->visualizeImportantRadius);
+    SET_JSON_VALUE(jsonSettings, ["importantRadius"], this->importantRadius);
 
-    jsonSettings["updateRate"] = this->updateRate;
+    SET_JSON_VALUE(jsonSettings, ["updateRate"], this->updateRate);
 
-    jsonSettings["noRecoil"]["enabled"] = this->noRecoil.enabled;
-    jsonSettings["noRecoil"]["shootinggIntensity"] = this->noRecoil.shootinggIntensity;
-    jsonSettings["noRecoil"]["breathIntensity"] = this->noRecoil.breathIntensity;
-    jsonSettings["noRecoil"]["motionIntensity"] = this->noRecoil.motionIntensity;
+    SET_JSON_VALUE(jsonSettings, ["noRecoil"]["enabled"], this->noRecoil.enabled);
+    SET_JSON_VALUE(jsonSettings, ["noRecoil"]["shootinggIntensity"], this->noRecoil.shootinggIntensity);
+    SET_JSON_VALUE(jsonSettings, ["noRecoil"]["breathIntensity"], this->noRecoil.breathIntensity);
+    SET_JSON_VALUE(jsonSettings, ["noRecoil"]["motionIntensity"], this->noRecoil.motionIntensity);
 
-    jsonSettings["snapLines"]["activeMode"] = this->snapLines.activeMode;
-    jsonSettings["snapLines"]["types"][0] = this->snapLines.types[0];
-    jsonSettings["snapLines"]["types"][1] = this->snapLines.types[1];
-    jsonSettings["snapLines"]["types"][2] = this->snapLines.types[2];
+    SET_JSON_VALUE(jsonSettings, ["snapLines"]["activeMode"], this->snapLines.activeMode);
+    SET_JSON_VALUE(jsonSettings, ["snapLines"]["types"][0], this->snapLines.types[0]);
+    SET_JSON_VALUE(jsonSettings, ["snapLines"]["types"][1], this->snapLines.types[1]);
+    SET_JSON_VALUE(jsonSettings, ["snapLines"]["types"][2], this->snapLines.types[2]);
 
-    jsonSettings["boxESP"]["types"][0] = this->boxESP.types[0];
-    jsonSettings["boxESP"]["types"][1] = this->boxESP.types[1];
-    jsonSettings["boxESP"]["types"][2] = this->boxESP.types[2];
-    jsonSettings["boxESP"]["factor"] = this->boxESP.factor;
+    SET_JSON_VALUE(jsonSettings, ["boxESP"]["types"][0], this->boxESP.types[0]);
+    SET_JSON_VALUE(jsonSettings, ["boxESP"]["types"][1], this->boxESP.types[1]);
+    SET_JSON_VALUE(jsonSettings, ["boxESP"]["types"][2], this->boxESP.types[2]);
+    SET_JSON_VALUE(jsonSettings, ["boxESP"]["factor"], this->boxESP.factor);
 
-    jsonSettings["skeletonESP"]["distance"] = this->skeletonESP.distance;
-    jsonSettings["skeletonESP"]["closeFOV"] = this->skeletonESP.closeFOV;
-    jsonSettings["skeletonESP"]["entities"] = this->skeletonESP.entities;
+    SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["distance"], this->skeletonESP.distance);
+    SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["closeFOV"], this->skeletonESP.closeFOV);
+    SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["entities"], this->skeletonESP.entities);
 
-    jsonSettings["keybinds"]["toggleNoRecoil"] = this->keybinds.toggleNoRecoil;
+    SET_JSON_VALUE(jsonSettings, ["keybinds"]["toggleNoRecoil"], this->keybinds.toggleNoRecoil);
 
-    jsonSettings["debug"]["enabled"] = this->debug.enabled;
+    SET_JSON_VALUE(jsonSettings, ["debug"]["enabled"], this->debug.enabled);
 
     std::ofstream fs{"config.json"};
     if (fs.is_open()) {
