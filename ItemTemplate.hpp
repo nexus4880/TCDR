@@ -2,6 +2,7 @@
 
 #include <numbers>
 #include <string>
+#include <optional>
 
 class ItemTemplate {
 public:
@@ -10,9 +11,11 @@ public:
 	}
 
 	std::wstring GetId();
-	std::wstring GetName();
-	std::wstring GetShortName();
-	bool IsQuestItem();
+	std::wstring GetLocalizedName();
 
 	intptr_t address;
+
+private:
+	std::optional<std::wstring> cachedId;
+	std::optional<std::wstring> cachedLocalizedName;
 };
