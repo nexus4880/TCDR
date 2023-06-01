@@ -7,7 +7,7 @@
 
 class WorldLootItem {
 public:
-	WorldLootItem(intptr_t address) : cachedTransformAddress(0) {
+	WorldLootItem(uint64_t address) : cachedTransformAddress(0) {
 		this->address = address;
 	}
 
@@ -16,11 +16,11 @@ public:
 	std::optional<std::wstring> GetId();
 	std::optional<std::wstring> GetLocalizedName();
 
-	intptr_t address;
+	uint64_t address;
 	
 private:
 	std::optional<bool> cachedIsContainer = std::nullopt;
-	intptr_t cachedTransformAddress;
+	uint64_t cachedTransformAddress;
 	std::optional<std::wstring> cachedId;
 	std::optional<std::wstring> cachedLocalizedName;
 };

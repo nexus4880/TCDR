@@ -22,7 +22,7 @@ struct matrix34_t {
 	Vector4 vec2{};
 };
 
-Vector3 GetPositionFromTransform(intptr_t transform) {
+Vector3 GetPositionFromTransform(uint64_t transform) {
 	__m128 result{};
 
 	const __m128 mulVec0 = { -2.000, 2.000, -2.000, 0.000 };
@@ -77,7 +77,7 @@ Vector3 GetPositionFromTransform(intptr_t transform) {
 	return Vector3(result.m128_f32[0], result.m128_f32[1], result.m128_f32[2]);
 }
 
-Player::Player(intptr_t address) :
+Player::Player(uint64_t address) :
 	address(address), cachedEFTPlayerClassAddress(0),
 	cachedTransformAddress(0)
 {
@@ -86,7 +86,7 @@ Player::Player(intptr_t address) :
 ProfileInfo Player::GetProfileInfo() {
 	if (!this->cachedProfileInfo.has_value()) {
 		this->cachedProfileInfo = ProfileInfo{
-			Memory::ReadChain<intptr_t>(
+			Memory::ReadChain<uint64_t>(
 				Global::pMemoryInterface,
 				this->address,
 				{0x520, 0x28}
@@ -97,9 +97,9 @@ ProfileInfo Player::GetProfileInfo() {
 	return this->cachedProfileInfo.value();
 }
 
-intptr_t Player::GetSkeletonTransformListValues() {
+uint64_t Player::GetSkeletonTransformListValues() {
 	if (!this->cachedEFTPlayerClassAddress) {
-		this->cachedEFTPlayerClassAddress = Memory::ReadChain<intptr_t>(
+		this->cachedEFTPlayerClassAddress = Memory::ReadChain<uint64_t>(
 			Global::pMemoryInterface,
 			this->address,
 			{ 0xA8, 0x28, 0x28, 0x10 }
@@ -112,7 +112,7 @@ intptr_t Player::GetSkeletonTransformListValues() {
 
 Vector3 Player::GetPosition() {
 	if (!this->cachedTransformAddress) {
-		this->cachedTransformAddress = Memory::ReadChain<intptr_t>(
+		this->cachedTransformAddress = Memory::ReadChain<uint64_t>(
 			Global::pMemoryInterface,
 			this->GetSkeletonTransformListValues(),
 			{ 0x20, 0x10 }
@@ -123,12 +123,12 @@ Vector3 Player::GetPosition() {
 }
 
 Vector3 Player::GetBone(EBone bone) {
-	intptr_t boneAddress;
+	uint64_t boneAddress;
 	if (this->cachedBones.contains(bone)) {
 		boneAddress = this->cachedBones[bone];
 	}
 	else {
-		boneAddress = Memory::ReadValue<intptr_t>(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->GetSkeletonTransformListValues() + 0x20 + bone * 0x8) + 0x10);
+		boneAddress = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->GetSkeletonTransformListValues() + 0x20 + bone * 0x8) + 0x10);
 		this->cachedBones[bone] = boneAddress;
 	}
 
@@ -203,7 +203,7 @@ Color Player::GetColor(ProfileInfo inRelationTo) {
 InventoryController Player::GetInventoryController() {
 	if (!this->cachedInventoryController.has_value()) {
 		this->cachedInventoryController = InventoryController{
-			Memory::ReadValue<intptr_t>(
+			Memory::ReadValue<uint64_t>(
 				Global::pMemoryInterface,
 				this->address + Offsets::Player::InventoryController
 			)
@@ -214,5 +214,5 @@ InventoryController Player::GetInventoryController() {
 }
 
 Item Player::GetActiveWeapon() {
-	return Item{ Memory::ReadChain<intptr_t>(Global::pMemoryInterface, this->address, {0x570, 0x60}) };
+	return Item{ Memory::ReadChain<uint64_t>(Global::pMemoryInterface, this->address, {0x570, 0x60}) };
 }

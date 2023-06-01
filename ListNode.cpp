@@ -4,16 +4,16 @@
 
 #define MAX_TRIES 10000
 
-intptr_t ListNode::GetObject(const char* objectName) {
+uint64_t ListNode::GetObject(const char* objectName) {
 	int count = 0;
 	char name[256]{0};
-	intptr_t classNamePointer = 0x0;
+	uint64_t classNamePointer = 0x0;
 	BaseObject activeObject = Memory::ReadValue<BaseObject>(Global::pMemoryInterface, this->last);
 	BaseObject lastObject = Memory::ReadValue<BaseObject>(Global::pMemoryInterface, this->first);
 	if (activeObject.object != 0x0) {
 		while (activeObject.object != 0 && activeObject.object != lastObject.object) {
 			count++;
-			classNamePointer = Memory::ReadValue<intptr_t>(Global::pMemoryInterface, activeObject.object + 0x60);
+			classNamePointer = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, activeObject.object + 0x60);
 			Global::pMemoryInterface->ReadRaw(classNamePointer + 0x0, &name, sizeof(name));
 			if (!objectName || !strcmp(name, objectName)) {
 				return activeObject.object;
@@ -28,7 +28,7 @@ intptr_t ListNode::GetObject(const char* objectName) {
 	}
 
 	if (lastObject.object != 0x0) {
-		classNamePointer = Memory::ReadValue<intptr_t>(Global::pMemoryInterface, lastObject.object + 0x60);
+		classNamePointer = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, lastObject.object + 0x60);
 		Global::pMemoryInterface->ReadRaw(classNamePointer + 0x0, &name, 256);
 		if (!objectName || !strcmp(name, objectName)) {
 			return lastObject.object;

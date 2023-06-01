@@ -2,7 +2,7 @@
 #include "Utils.h"
 
 namespace Memory {
-    std::wstring ReadString(IMemoryInterface* pMemoryInterface, intptr_t address, bool sanitize) {
+    std::wstring ReadString(IMemoryInterface* pMemoryInterface, uint64_t address, bool sanitize) {
         if (!address || address < MINIMUM_ADDRESS_SIZE) {
             return INVALID_ADDRESS_WSTRING;
         }
