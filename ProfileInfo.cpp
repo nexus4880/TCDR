@@ -37,13 +37,13 @@ std::wstring ProfileInfo::GetGroupID() {
 std::wstring ProfileInfo::GetGroupHash() {
 	if (!this->cachedGroupHash.has_value()) {
 		std::wstring id = this->GetGroupID();
-		if (id == NULL_WSTRING || id == INVALID_ADDRESS_WSTRING || id == INVALID_LENGTH_WSTRING) {
-			id = NULL_WSTRING;
-		}
-		else {
+		if (IS_VALID_WSTRING(id)) {
 			std::string idStr(id.begin(), id.end());
 			unsigned int hash = Utils::HashString(idStr);
 			id = std::to_wstring(hash % 100000);
+		}
+		else {
+			id = NULL_WSTRING;
 		}
 
 		this->cachedGroupHash = id;
