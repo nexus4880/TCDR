@@ -3,8 +3,16 @@
 #include <numeric>
 #include <vector>
 #include <tuple>
+#include <string>
 
 #define MINIMUM_ADDRESS_SIZE 2048
+
+#define NULL_WSTRING L"_NULL_"
+#define INVALID_ADDRESS_WSTRING L"_INVALID_ADDRESS_"
+#define INVALID_LENGTH_WSTRING L"_INVALID_LENGTH_"
+
+#define IS_VALID_WSTRING(str) \
+    (str != NULL_WSTRING && str != INVALID_ADDRESS_WSTRING && str != INVALID_LENGTH_WSTRING)
 
 __interface IMemoryInterface
 {
@@ -76,5 +84,5 @@ namespace Memory {
         return std::tuple<int, T*>{length, buffer};
     }
 
-    wchar_t* ReadString(IMemoryInterface* pMemoryInterface, intptr_t address, bool sanitize = true);
+    std::wstring ReadString(IMemoryInterface* pMemoryInterface, intptr_t address, bool sanitize = true);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numbers>
+#include <string>
 
 class ItemTemplate {
 public:
@@ -8,9 +9,9 @@ public:
 		this->address = address;
 	}
 
-	wchar_t* GetId();
-	wchar_t* GetName();
-	wchar_t* GetShortName();
+	std::wstring GetId();
+	std::wstring GetName();
+	std::wstring GetShortName();
 	bool IsQuestItem();
 
 	intptr_t address;

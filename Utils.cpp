@@ -37,33 +37,11 @@ namespace Utils {
         std::swap(*(matrix + 11), *(matrix + 14));
     }
 
-    const wchar_t* WTextFormat(const char* text, ...) {
-        static wchar_t* buffer;
-        va_list args;
-        va_start(args, text);
-        std::vsnprintf(reinterpret_cast<char*>(buffer), sizeof(buffer), text, args);
-        va_end(args);
-        return buffer;
-    }
-
     float LerpF(float a, float b, float t) {
         return a + t * (b - a);
     }
 
-    std::string WCharToString(const wchar_t* text) {
-        if (!text) {
-            return "(null)";
-        }
-
-        int length = static_cast<int>(wcslen(text));
-        int size = WideCharToMultiByte(CP_UTF8, 0, text, length, nullptr, 0, nullptr, nullptr);
-        std::string result(size, 0);
-        WideCharToMultiByte(CP_UTF8, 0, text, length, result.data(), size, nullptr, nullptr);
-
-        return result;
-    }
-
-    const wchar_t* GetRoleName(int role) {
+    const std::wstring GetRoleName(int role) {
         switch (role) {
             case 5:
             case 8:

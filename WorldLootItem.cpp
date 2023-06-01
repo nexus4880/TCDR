@@ -20,8 +20,8 @@ Vector3 WorldLootItem::GetPosition() {
 
 std::optional<std::wstring> WorldLootItem::GetId() {
 	if (!this->cachedId.has_value()) {
-		wchar_t* readString = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x68));
-		if (readString) {
+		std::wstring readString = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x68));
+		if (IS_VALID_WSTRING(readString)) {
 			this->cachedId = readString;
 		}
 		else {

@@ -171,9 +171,9 @@ void Player::DrawBones(float alpha, ProfileInfo& localPlayerInfo) {
 Color Player::GetColor(ProfileInfo inRelationTo) {
 	if (!this->cachedColor.has_value()) {
 		ProfileInfo info = this->GetProfileInfo();
-		const wchar_t* playerGroupId = info.GetGroupID();
-		const wchar_t* relativeId = inRelationTo.GetGroupID();
-		if (!relativeId || !playerGroupId || (wcscmp(relativeId, playerGroupId) != 0)) {
+		const std::wstring playerGroupId = info.GetGroupID();
+		const std::wstring relativeId = inRelationTo.GetGroupID();
+		if (!IS_VALID_WSTRING(playerGroupId) || !IS_VALID_WSTRING(relativeId) || relativeId != playerGroupId) {
 			switch (info.GetSide()) {
 			case 1:
 			{

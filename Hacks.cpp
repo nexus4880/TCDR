@@ -144,8 +144,8 @@ namespace Hacks {
 			if (isInImportantRange) {
 				ItemTemplate itemTemplate = player.GetActiveWeapon().GetTemplate();
 				if (itemTemplate.address) {
-					const wchar_t* templateId = itemTemplate.GetId();
-					if (templateId) {
+					const std::wstring templateId = itemTemplate.GetId();
+					if (IS_VALID_WSTRING(templateId)) {
 						if (Global::itemTemplates.contains(templateId)) {
 							stream << Global::itemTemplates[templateId].c_str() << L"\n";
 						}
@@ -166,6 +166,7 @@ namespace Hacks {
 
 			stream << std::format("[{:0.0f}m]", distance).c_str();
 			// Convert stream from wchar_t* to char* for raylib
+
 			std::wstring str = stream.str();
 			const size_t bufferSize = (str.size() + 1) * sizeof(char);
 			char* buffer = new char[bufferSize];

@@ -2,6 +2,7 @@
 
 #include <numbers>
 #include <optional>
+#include <string>
 #include "ProfileSettings.hpp"
 
 /*    [00][C] Default : System.Int32
@@ -38,8 +39,8 @@ public:
 
 	unsigned char GetSide();
 	int GetRegistrationDate();
-	wchar_t* GetNickname();
-	wchar_t* GetGroupID();
+	std::wstring GetNickname();
+	std::wstring GetGroupID();
 	ProfileSettings GetSettings();
 	bool IsPlayer();
 	bool IsBoss();
@@ -50,8 +51,8 @@ public:
 private:
 	std::optional<unsigned char> cachedSide = std::nullopt;
 	std::optional<int> cachedRegistrationDate = std::nullopt;
-	wchar_t* cachedNickname = nullptr;
-	std::optional<wchar_t*> cachedGroupID = std::nullopt;
+	std::optional<std::wstring> cachedNickname = std::nullopt;
+	std::optional<std::wstring> cachedGroupID = std::nullopt;
 	std::optional<ProfileSettings> cachedProfileSettings = std::nullopt;
 	std::optional<EMemberCategory> cachedMemberCategory = std::nullopt;
 };

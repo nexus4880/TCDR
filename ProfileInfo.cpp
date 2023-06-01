@@ -18,15 +18,15 @@ int ProfileInfo::GetRegistrationDate() {
 	return this->cachedRegistrationDate.value();
 }
 
-wchar_t* ProfileInfo::GetNickname() {
-	if (!this->cachedNickname) {
+std::wstring ProfileInfo::GetNickname() {
+	if (!this->cachedNickname.has_value()) {
 		this->cachedNickname = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x10));
 	}
 
-	return this->cachedNickname;
+	return this->cachedNickname.value();
 }
 
-wchar_t* ProfileInfo::GetGroupID() {
+std::wstring ProfileInfo::GetGroupID() {
 	if (!this->cachedGroupID.has_value()) {
 		this->cachedGroupID = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x20));
 	}
