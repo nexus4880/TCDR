@@ -19,6 +19,12 @@ struct Settings {
 		bool types[3]{false, false, false};
 	};
 
+	struct BoxESP {
+		//			  player boss   AI
+		bool types[3]{ false, false, false };
+		float factor;
+	};
+
 	struct SkeletonESP {
 		float distance = 100.f;
 		float closeFOV = 100.f;
@@ -39,6 +45,7 @@ struct Settings {
 	float updateRate = 1.f;
 	NoRecoil noRecoil;
 	SnapLines snapLines;
+	BoxESP boxESP;
 	SkeletonESP skeletonESP;
 	Keybinds keybinds;
 	Debug debug;
