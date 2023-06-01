@@ -3,7 +3,7 @@
 #include <Psapi.h>
 #include "Utils.h"
 
-#define PRIMITIVES_ONLY
+#define PRIMITIVES_ONLY 1
 #include "Global.hpp"
 
 BasicMemoryInterface::~BasicMemoryInterface() {
@@ -67,7 +67,6 @@ bool BasicMemoryInterface::SetTargetModule(wchar_t* moduleName) {
 }
 
 bool BasicMemoryInterface::ReadRaw(intptr_t address, void* pBuffer, unsigned long size) {
-    Global::readCalls[Global::currentFrame]++;
     if (!this->pid || !this->handle || address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
@@ -76,7 +75,6 @@ bool BasicMemoryInterface::ReadRaw(intptr_t address, void* pBuffer, unsigned lon
 }
 
 bool BasicMemoryInterface::WriteRaw(intptr_t address, void* pBuffer, unsigned long size) {
-    Global::writeCalls[Global::currentFrame]++;
     if (!this->pid || !this->handle || address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }

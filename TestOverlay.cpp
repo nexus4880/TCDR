@@ -92,8 +92,6 @@ void TestOverlay::OnFocusLost() {
 }
 
 void TestOverlay::UpdateImGui() {
-	Global::readCalls[Global::currentFrame] = 0;
-	Global::writeCalls[Global::currentFrame] = 0;
 	Global::totalTime += GetFrameTime();
 	Global::centerScreen = Vector2{GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
 	if (Global::pMemoryInterface->UpdateProcessId(L"EscapeFromTarkov.exe")) {
@@ -102,7 +100,6 @@ void TestOverlay::UpdateImGui() {
 				Global::lastUpdated = Global::totalTime;
 				Global::activeCamera.address = 0;
 				Global::gameWorld = GameWorld::Get();
-				Global::updateCount++;
 				if (Global::gameWorld.address) {
 					Global::activeCamera = EFTCamera{Global::gom.GetCameraList().GetObject(nullptr)};
 				}
@@ -116,16 +113,6 @@ void TestOverlay::UpdateImGui() {
 			Global::gom = GameObjectManager::Get();
 		}
 	}
-
-	Global::currentFrame++;
-	if (Global::currentFrame >= 60) {
-		for (int i = 0; i < 60; i++) {
-			Global::readCalls[i] = 0;
-			Global::writeCalls[i] = 0;
-		}
-
-		Global::currentFrame = 0;
-	}
 }
 
 bool TestOverlay::ShouldShowMenu() {
@@ -135,20 +122,12 @@ bool TestOverlay::ShouldShowMenu() {
 void TestOverlay::DrawImGui() {
 	if (Global::pSettings->debug.enabled) {
 		if (ImGui::Begin("Debug")) {
-			ImPlot::SetNextAxesLimits(0, 60, 0, 1000, ImPlotCond_::ImPlotCond_Always);
-			if (ImPlot::BeginPlot("Read", ImVec2(-1, -1))) {
-				ImPlot::PlotBars<unsigned int>("Read", Global::readCalls, 60);
-				ImPlot::PlotBars<unsigned int>("Write", Global::writeCalls, 60);
-				ImPlot::EndPlot();
-			}
 		}
 
 		ImGui::End();
 	}
 
 	if (this->isMenuOpen) {
-
-
 		if (ImGui::Selectable(TextFormat("GOM: %p", Global::gom.address))) {
 			std::ostringstream stream{};
 			stream << std::uppercase << std::hex << Global::gom.address;

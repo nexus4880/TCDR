@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include "Utils.h"
-#define PRIMITIVES_ONLY
+#define PRIMITIVES_ONLY 1
 #include "Global.hpp"
 
 #define SIOCTL_TYPE 40000
@@ -32,7 +32,6 @@ struct IOGetBaseAddressRequest {
 };
 
 bool DriverInterop::ReadRaw(intptr_t address, void* data, unsigned long size) {
-    Global::readCalls[Global::currentFrame]++;
     if (address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
@@ -43,7 +42,6 @@ bool DriverInterop::ReadRaw(intptr_t address, void* data, unsigned long size) {
 }
 
 bool DriverInterop::WriteRaw(intptr_t address, void* data, unsigned long size) {
-    Global::writeCalls[Global::currentFrame]++;
     if (address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
