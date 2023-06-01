@@ -41,6 +41,7 @@ public:
 	int GetRegistrationDate();
 	std::wstring GetNickname();
 	std::wstring GetGroupID();
+	std::wstring GetGroupHash();
 	ProfileSettings GetSettings();
 	bool IsPlayer();
 	bool IsBoss();
@@ -53,6 +54,7 @@ private:
 	std::optional<int> cachedRegistrationDate = std::nullopt;
 	std::optional<std::wstring> cachedNickname = std::nullopt;
 	std::optional<std::wstring> cachedGroupID = std::nullopt;
+	std::optional<std::wstring> cachedGroupHash = std::nullopt;
 	std::optional<ProfileSettings> cachedProfileSettings = std::nullopt;
 	std::optional<EMemberCategory> cachedMemberCategory = std::nullopt;
 };

@@ -34,6 +34,24 @@ std::wstring ProfileInfo::GetGroupID() {
 	return this->cachedGroupID.value();
 }
 
+std::wstring ProfileInfo::GetGroupHash() {
+	if (!this->cachedGroupHash.has_value()) {
+		std::wstring id = this->GetGroupID();
+		if (id == NULL_WSTRING || id == INVALID_ADDRESS_WSTRING || id == INVALID_LENGTH_WSTRING) {
+			id = NULL_WSTRING;
+		}
+		else {
+			std::string idStr(id.begin(), id.end());
+			unsigned int hash = Utils::HashString(idStr);
+			id = std::to_wstring(hash % 100000);
+		}
+
+		this->cachedGroupHash = id;
+	}
+
+	return this->cachedGroupHash.value();
+}
+
 ProfileSettings ProfileInfo::GetSettings() {
 	if (!this->cachedProfileSettings.has_value()) {
 		this->cachedProfileSettings = ProfileSettings{Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x50)};
