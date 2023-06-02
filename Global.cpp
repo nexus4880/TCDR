@@ -7,7 +7,6 @@ namespace Global {
 	GameObjectManager gom{0};
 	GameWorld gameWorld{0};
 	EFTCamera activeCamera{0};
-	std::vector<std::wstring> lootESPFilters;
 	std::map<std::wstring, std::wstring> itemTemplates;
 	Vector2 centerScreen;
 #endif

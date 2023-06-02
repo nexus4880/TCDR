@@ -13,8 +13,23 @@
         } \
     })()
 
+#define TRY_READ_LIST(type, vec, jobj, path) \
+    ([&jobj, &vec](){ \
+        try { \
+            for (const auto& element : jobj path) { \
+                vec.push_back(element.get<type>()); \
+            } \
+        } catch (const std::exception& ex) { \
+        } \
+    })()
+
 #define SET_JSON_VALUE(jobj, path, value) \
     jobj path = value
+
+#define SET_LIST_VALUE(jobj, vec, path) \
+    for (const auto& element : vec) { \
+        jobj path.push_back(element); \
+    }
 
 Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) {
     if (hasErrorOccurred) {
@@ -76,6 +91,14 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
     settings.skeletonESP.closeFOV = TRY_READ(float, json, ["skeletonESP"]["closeFOV"]);
     settings.skeletonESP.entities = TRY_READ(int, json, ["skeletonESP"]["entities"]);
 
+    settings.lootESP.enabled = TRY_READ(bool, json, ["lootESP"]["enabled"]);
+    settings.lootESP.distance = TRY_READ(float, json, ["lootESP"]["distance"]);
+    std::vector<std::string> lootESPFilters{};
+    TRY_READ_LIST(std::string, lootESPFilters, json, ["lootESP"]["filters"]);
+    for (const auto& filter : lootESPFilters) {
+        settings.lootESP.filters.push_back(std::wstring{filter.begin(), filter.end()});
+    }
+
     settings.keybinds.toggleNoRecoil = TRY_READ(int, json, ["keybinds"]["toggleNoRecoil"]);
 
     settings.debug.enabled = TRY_READ(int, json, ["debug"]["enabled"]);
@@ -111,6 +134,16 @@ void Settings::Serialize() {
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["distance"], this->skeletonESP.distance);
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["closeFOV"], this->skeletonESP.closeFOV);
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["entities"], this->skeletonESP.entities);
+
+    SET_JSON_VALUE(jsonSettings, ["lootESP"]["enabled"], this->lootESP.enabled);
+    SET_JSON_VALUE(jsonSettings, ["lootESP"]["distance"], this->lootESP.distance);
+    std::vector<std::string> lootESPFilters{};
+    lootESPFilters.reserve(this->lootESP.filters.size());
+    for (const auto& element : this->lootESP.filters) {
+        lootESPFilters.push_back(std::string{element.begin(), element.end()});
+    }
+
+    SET_LIST_VALUE(jsonSettings, lootESPFilters, ["lootESP"]["filters"]);
 
     SET_JSON_VALUE(jsonSettings, ["keybinds"]["toggleNoRecoil"], this->keybinds.toggleNoRecoil);
 

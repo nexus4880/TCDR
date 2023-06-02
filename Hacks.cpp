@@ -18,6 +18,7 @@
 namespace Hacks {
 	const char* snapLineModes[4]{ "Off", "Center", "Bottom", "Top" };
 	Vector4 minMaxValuesToWrite{ 0.f, 0.f, 0.f, 0.f };
+	char lootESPFilterInputBuffer[255];
 
 	Vector2 GetSnaplineBase() {
 		switch (Global::pSettings->snapLines.activeMode) {
@@ -39,10 +40,6 @@ namespace Hacks {
 	}
 
 	void DoNoRecoil() {
-		if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.toggleNoRecoil) & 1) {
-			Global::pSettings->noRecoil.enabled = !Global::pSettings->noRecoil.enabled;
-		}
-
 		if (Global::pSettings->noRecoil.enabled && Global::gameWorld.GetPlayers().size() > 0) {
 			uint64_t pwa = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Global::gameWorld.GetPlayers()[0].address + 0x1A0);
 			if (pwa) {
@@ -66,46 +63,40 @@ namespace Hacks {
 
 	void DrawMenuOptions() {
 		if (ImGui::CollapsingHeader("Recoil")) {
+			ImGui::Indent();
 			ImGui::Checkbox("Enabled", &Global::pSettings->noRecoil.enabled);
 			ImGui::DragFloat("Shootingg Intensity", &Global::pSettings->noRecoil.shootinggIntensity, 0.01f, 0.f, 1.f);
 			ImGui::DragFloat("Breath Intensity", &Global::pSettings->noRecoil.breathIntensity, 0.01f, 0.f, 1.f);
 			ImGui::DragFloat("Motion Intensity", &Global::pSettings->noRecoil.motionIntensity, 0.01f, 0.f, 1.f);
-			if (ImGui::Button("Swap Nosway Values")) {
-				uint64_t pwa = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Global::gameWorld.GetPlayers()[0].address + 0x1A0);
-				if (pwa) {
-					uint64_t walk = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, pwa + 0x30);
-					if (walk) {
-						uint64_t minMax = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, walk + 0x38);
-						if (minMax) {
-							Vector4 currentValues = Memory::ReadValue<Vector4>(Global::pMemoryInterface, minMax + 0x20);
-							Memory::Write<Vector4>(Global::pMemoryInterface, minMax + 0x20, minMaxValuesToWrite);
-							minMaxValuesToWrite = currentValues;
-						}
-					}
-				}
-			}
+			ImGui::Unindent();
 		}
 
 		if (ImGui::CollapsingHeader("ESP")) {
+			ImGui::Indent();
 			if (ImGui::CollapsingHeader("Snaplines")) {
+				ImGui::Indent();
 				ImGui::PushID("ESP_Snaplines");
 				ImGui::Combo("Mode", &Global::pSettings->snapLines.activeMode, snapLineModes, 4);
 				ImGui::Checkbox("Players", &Global::pSettings->snapLines.types[0]);
 				ImGui::Checkbox("Bosses", &Global::pSettings->snapLines.types[1]);
 				ImGui::Checkbox("AI", &Global::pSettings->snapLines.types[2]);
+				ImGui::Unindent();
 				ImGui::PopID();
 			}
 
 			if (ImGui::CollapsingHeader("Box")) {
+				ImGui::Indent();
 				ImGui::PushID("ESP_Box");
 				ImGui::Checkbox("Players", &Global::pSettings->boxESP.types[0]);
 				ImGui::Checkbox("Bosses", &Global::pSettings->boxESP.types[1]);
 				ImGui::Checkbox("AI", &Global::pSettings->boxESP.types[2]);
 				ImGui::DragFloat("Factor", &Global::pSettings->boxESP.factor, 1.f, 1.f);
+				ImGui::Unindent();
 				ImGui::PopID();
 			}
 
 			if (ImGui::CollapsingHeader("Skeleton")) {
+				ImGui::Indent();
 				ImGui::PushID("ESP_Skeleton");
 				//ImGui::DragFloat("Close FOV", &Global::pSettings->skeletonESP.closeFOV);
 				int* skeletonESPEntitiesCount = &Global::pSettings->skeletonESP.entities;
@@ -117,8 +108,51 @@ namespace Hacks {
 				}
 
 				ImGui::DragFloat("Max Distance", &Global::pSettings->skeletonESP.distance);
+				ImGui::Unindent();
 				ImGui::PopID();
 			}
+
+			if (ImGui::CollapsingHeader("Loot")) {
+				ImGui::Indent();
+				ImGui::PushID("ESP_Loot");
+				ImGui::Checkbox("Enabled", &Global::pSettings->lootESP.enabled);
+				ImGui::DragFloat("Distance", &Global::pSettings->lootESP.distance);
+				ImGui::InputText("Filter", lootESPFilterInputBuffer, 255);
+				bool shouldClear = false;
+				if (ImGui::Button("Add")) {
+					std::string tempStr{lootESPFilterInputBuffer};
+					Global::pSettings->lootESP.filters.push_back(std::wstring{tempStr.begin(), tempStr.end()});
+					shouldClear = true;
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("Clear")) {
+					shouldClear = true;
+				}
+
+				if (shouldClear) {
+					for (int i = 0; i < 255; i++) {
+						lootESPFilterInputBuffer[i] = '\0';
+					}
+				}
+
+				size_t filterCount = Global::pSettings->lootESP.filters.size();
+				if (filterCount > 0) {
+					if (ImGui::CollapsingHeader("Active Filters")) {
+						for (size_t i = 0; i < filterCount; i++) {
+							if (ImGui::Selectable(TextFormat("%ws", Global::pSettings->lootESP.filters[i].c_str()))) {
+								Global::pSettings->lootESP.filters.erase(Global::pSettings->lootESP.filters.begin() + i);
+								break;
+							}
+						}
+					}
+				}
+
+				ImGui::Unindent();
+				ImGui::PopID();
+			}
+
+			ImGui::Unindent();
 		}
 	}
 
@@ -313,25 +347,45 @@ namespace Hacks {
 	}
 
 	void DrawLootESP() {
-		std::vector<WorldLootItem> loot = Global::gameWorld.GetLoot();
+		if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0) {
+			return;
+		}
+
+		size_t filtersCount = Global::pSettings->lootESP.filters.size();
+		std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
+		Vector3 localPlayerPosition = Global::gameWorld.GetPlayers()[0].GetPosition();
 		for (int i = 0; i < loot.size(); i++) {
-			if (loot[i].IsContainer()) {
+			Vector3 worldPosition = loot[i].GetPosition();
+			float distance = Vector3Distance(worldPosition, localPlayerPosition);
+			if (distance > Global::pSettings->lootESP.distance) {
 				continue;
 			}
 
-			Vector3 worldPosition = loot[i].GetPosition();
 			Vector3 screenPosition = Global::activeCamera.WorldToScreen(worldPosition);
 			if (screenPosition.z < 0.01f) {
 				continue;
 			}
 
-			std::wstring itemName = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, loot[i].address + 0x68));
-			if (Global::itemTemplates.contains(itemName)) {
-				itemName = Global::itemTemplates[itemName];
+			bool isLocalized = false;
+			std::wstring itemName = loot[i].GetLocalizedName(&isLocalized);
+			if (!isLocalized) {
+				continue;
 			}
 
-			std::string drawText(itemName.begin(), itemName.end());
-			DrawText(drawText.data(), screenPosition.x, screenPosition.y, 1, VIOLET);
+			if (filtersCount > 0) {
+				bool found = false;
+				for (size_t i = 0; i < filtersCount; i++) {
+					if (Utils::ContainsIgnoreCase(itemName, Global::pSettings->lootESP.filters[i])) {
+						found = true;
+					}
+				}
+
+				if (!found) {
+					continue;
+				}
+			}
+
+			DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(), screenPosition.x, screenPosition.y, 1, VIOLET);
 		}
 	}
 

@@ -8,7 +8,6 @@
 #include "GameWorld.hpp"
 #include "EFTCamera.hpp"
 #include <string>
-#include <vector>
 #include <map>
 #include <memory>
 #endif
@@ -20,7 +19,6 @@ namespace Global {
 	extern GameObjectManager gom;
 	extern GameWorld gameWorld;
 	extern EFTCamera activeCamera;
-	extern std::vector<std::wstring> lootESPFilters;
 	extern std::map<std::wstring, std::wstring> itemTemplates;
 	extern Vector2 centerScreen;
 #endif

@@ -11,4 +11,5 @@ namespace Utils {
 	const std::wstring GetRoleName(int role);
 	bool IsValidWChar(wchar_t value);
 	unsigned int HashString(const std::string& input);
+	bool ContainsIgnoreCase(const std::wstring& str, const std::wstring& substr);
 }

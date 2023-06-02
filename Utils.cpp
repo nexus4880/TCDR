@@ -7,6 +7,8 @@
 #include <string>
 #include <locale>
 #include <codecvt>
+#include <algorithm>
+#include <cwctype>
 
 namespace Utils {
     unsigned long GetProcessIdByName(const wchar_t* ProcName) {
@@ -153,5 +155,15 @@ namespace Utils {
         }
 
         return hash;
+    }
+
+    bool ContainsIgnoreCase(const std::wstring& str, const std::wstring& substr) {
+        std::wstring strLower = str;
+        std::wstring substrLower = substr;
+
+        std::transform(strLower.begin(), strLower.end(), strLower.begin(), std::towlower);
+        std::transform(substrLower.begin(), substrLower.end(), substrLower.begin(), std::towlower);
+
+        return strLower.find(substrLower) != std::wstring::npos;
     }
 }

@@ -58,7 +58,6 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 	}
 
 	SetExitKey(KeyboardKey::KEY_NULL);
-	Global::lootESPFilters.reserve(32);
 	if (std::filesystem::exists("items.json")) {
 		std::wifstream fs{"items.json"};
 		fs.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
@@ -178,7 +177,7 @@ void TestOverlay::DrawImGui() {
 	}
 
 	if (Global::gameWorld.address && Global::activeCamera.address) {
-		//Hacks::DrawLootESP();
+		Hacks::DrawLootESP();
 		Hacks::DrawPlayerESP();
 		Hacks::DrawSkeletonESP();
 	}

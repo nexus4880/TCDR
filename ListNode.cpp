@@ -2,7 +2,7 @@
 #include "BaseObject.hpp"
 #include "Global.hpp"
 
-#define MAX_TRIES 10000
+const int MAX_TRIES = 10000;
 
 uint64_t ListNode::GetObject(const char* objectName) {
 	int count = 0;

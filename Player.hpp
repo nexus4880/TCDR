@@ -9,7 +9,7 @@
 #include <map>
 #include <optional>
 
-#define BONE_PATH_SIZE 21
+const int BONE_PATH_SIZE = 21;
 
 class Player {
 public:
