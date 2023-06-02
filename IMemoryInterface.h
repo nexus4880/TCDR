@@ -2,7 +2,6 @@
 
 #include <numeric>
 #include <vector>
-#include <tuple>
 #include <string>
 
 #define MINIMUM_ADDRESS_SIZE 2048
@@ -72,16 +71,23 @@ namespace Memory {
     }
 
     template <typename T>
-    std::tuple<int, T*> ReadList(IMemoryInterface* pMemoryInterface, uint64_t address) {
+    std::vector<T> ReadList(IMemoryInterface* pMemoryInterface, uint64_t address) {
         int length = Memory::ReadValue<int>(pMemoryInterface, address + 0x18);
-        if (length == 0) {
-            return std::tuple<int, T*>{0, nullptr};
+        std::vector<T> result{};
+        if (length <= 0) {
+            return result;
         }
 
+        result.reserve(length);
         T* buffer = new T[length];
         pMemoryInterface->ReadRaw(Memory::ReadValue<uint64_t>(pMemoryInterface, address + 0x10) + 0x20, buffer, sizeof(T) * length);
+        for (int i = 0; i < length; i++) {
+            result.push_back(buffer[i]);
+        }
 
-        return std::tuple<int, T*>{length, buffer};
+        delete[] buffer;
+
+        return result;
     }
 
     std::wstring ReadString(IMemoryInterface* pMemoryInterface, uint64_t address, bool sanitize = true);

@@ -25,9 +25,9 @@ std::vector<Player> GameWorld::GetPlayers() {
 			this->address + Offsets::GameWorld::RegisteredPlayers
 		);
 		if (registeredPlayersAddress) {
-			std::tuple<int, uint64_t*> playerAddresses = Memory::ReadList<uint64_t>(Global::pMemoryInterface, registeredPlayersAddress);
-			for (int i = 0; i < std::get<0>(playerAddresses); i++) {
-				players.push_back(Player{std::get<1>(playerAddresses)[i]});
+			std::vector<uint64_t> playerAddresses = Memory::ReadList<uint64_t>(Global::pMemoryInterface, registeredPlayersAddress);
+			for (int i = 0; i < playerAddresses.size(); i++) {
+				players.push_back(Player{ playerAddresses[i]});
 			}
 		}
 
@@ -39,12 +39,11 @@ std::vector<Player> GameWorld::GetPlayers() {
 
 std::vector<WorldLootItem> GameWorld::GetLoot() {
 	if (!this->cachedLoot.has_value()) {
-		std::tuple<int, uint64_t*> list = Memory::ReadList<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x80));
-		int count = std::get<0>(list);
-		uint64_t* addresses = std::get<1>(list);
+		std::vector<uint64_t> addresses = Memory::ReadList<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x80));
+		int length = addresses.size();
 		std::vector<WorldLootItem> loot{};
-		loot.reserve(count);
-		for (int i = 0; i < count; i++) {
+		loot.reserve(length);
+		for (int i = 0; i < length; i++) {
 			loot.push_back(WorldLootItem{addresses[i]});
 		}
 
