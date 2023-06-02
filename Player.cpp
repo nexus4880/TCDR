@@ -4,78 +4,7 @@
 #include <emmintrin.h>
 #include "Utils.h"
 #include "Offsets.hpp"
-
-struct transform_access_read_only_t {
-	uint64_t transform_data{};
-	uint64_t data;
-	int index;
-};
-
-struct transform_data_t {
-	uint64_t transform_array{};
-	uint64_t transform_indices{};
-};
-
-struct matrix34_t {
-	Vector4 vec0{};
-	Vector4 vec1{};
-	Vector4 vec2{};
-};
-
-Vector3 GetPositionFromTransform(uint64_t transform) {
-	__m128 result{};
-
-	const __m128 mulVec0 = { -2.000, 2.000, -2.000, 0.000 };
-	const __m128 mulVec1 = { 2.000, -2.000, -2.000, 0.000 };
-	const __m128 mulVec2 = { -2.000, -2.000, 2.000, 0.000 };
-
-	transform_access_read_only_t pTransformAccessReadOnly = Memory::ReadValue<transform_access_read_only_t>(Global::pMemoryInterface, transform + 0x38);
-	//pTransformAccessReadOnly.index
-	unsigned int index = Memory::ReadValue<unsigned int>(Global::pMemoryInterface, transform + 0x40);
-	transform_data_t transformData = Memory::ReadValue<transform_data_t>(Global::pMemoryInterface, pTransformAccessReadOnly.transform_data + 0x18);
-
-	if (transformData.transform_array && transformData.transform_indices) {
-		result = Memory::ReadValue<__m128>(Global::pMemoryInterface, transformData.transform_array + (uint64_t)0x30 * index);
-		int transformIndex = Memory::ReadValue<int>(Global::pMemoryInterface, transformData.transform_indices + (uint64_t)0x4 * index);
-		int pSafe = 0;
-		while (transformIndex >= 0 && pSafe++ < 200) {
-			matrix34_t matrix34 = Memory::ReadValue<matrix34_t>(Global::pMemoryInterface, transformData.transform_array + (uint64_t)0x30 * transformIndex);
-
-			__m128 xxxx = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0x00));	// xxxx
-			__m128 yyyy = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0x55));	// yyyy
-			__m128 zwxy = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0x8E));	// zwxy
-			__m128 wzyw = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0xDB));	// wzyw
-			__m128 zzzz = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0xAA));	// zzzz
-			__m128 yxwy = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0x71));	// yxwy
-			__m128 tmp7 = _mm_mul_ps(*(__m128*)(&matrix34.vec2), result);
-
-			result = _mm_add_ps(
-				_mm_add_ps(
-					_mm_add_ps(
-						_mm_mul_ps(
-							_mm_sub_ps(
-								_mm_mul_ps(_mm_mul_ps(xxxx, mulVec1), zwxy),
-								_mm_mul_ps(_mm_mul_ps(yyyy, mulVec2), wzyw)),
-							_mm_castsi128_ps(_mm_shuffle_epi32(_mm_castps_si128(tmp7), 0xAA))),
-						_mm_mul_ps(
-							_mm_sub_ps(
-								_mm_mul_ps(_mm_mul_ps(zzzz, mulVec2), wzyw),
-								_mm_mul_ps(_mm_mul_ps(xxxx, mulVec0), yxwy)),
-							_mm_castsi128_ps(_mm_shuffle_epi32(_mm_castps_si128(tmp7), 0x55)))),
-					_mm_add_ps(
-						_mm_mul_ps(
-							_mm_sub_ps(
-								_mm_mul_ps(_mm_mul_ps(yyyy, mulVec0), yxwy),
-								_mm_mul_ps(_mm_mul_ps(zzzz, mulVec1), zwxy)),
-							_mm_castsi128_ps(_mm_shuffle_epi32(_mm_castps_si128(tmp7), 0x00))),
-						tmp7)), *(__m128*)(&matrix34.vec0));
-
-			transformIndex = Memory::ReadValue<int>(Global::pMemoryInterface, transformData.transform_indices + (uint64_t)0x4 * transformIndex);
-		}
-	}
-
-	return Vector3(result.m128_f32[0], result.m128_f32[1], result.m128_f32[2]);
-}
+#include "Hacks.hpp"
 
 Player::Player(uint64_t address) :
 	address(address), cachedEFTPlayerClassAddress(0),
@@ -119,7 +48,7 @@ Vector3 Player::GetPosition() {
 		);
 	}
 
-	return this->cachedTransformAddress ? GetPositionFromTransform(this->cachedTransformAddress) : Vector3{ 0.f, 0.f, 0.f };
+	return this->cachedTransformAddress ? Hacks::ReadPosition(this->cachedTransformAddress) : Vector3{ 0.f, 0.f, 0.f };
 }
 
 Vector3 Player::GetBone(EBone bone) {
@@ -132,7 +61,7 @@ Vector3 Player::GetBone(EBone bone) {
 		this->cachedBones[bone] = boneAddress;
 	}
 
-	return GetPositionFromTransform(boneAddress);
+	return Hacks::ReadPosition(boneAddress);
 }
 
 void Player::DrawBones(float alpha, ProfileInfo& localPlayerInfo) {
