@@ -60,11 +60,11 @@ std::vector<WorldLootItem>& GameWorld::GetLoot() {
 				continue;
 			}
 
-			if (filtersCount > 0)  {
-				bool found = false;
+			if (Global::pSettings->lootESP.useFilter && filtersCount > 0)  {
+				bool found = !Global::pSettings->lootESP.whitelist;
 				for (size_t i = 0; i < filtersCount; i++) {
 					if (Utils::ContainsIgnoreCase(itemName, Global::pSettings->lootESP.filters[i])) {
-						found = true;
+						found = !found;
 						break;
 					}
 				}

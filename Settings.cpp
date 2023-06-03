@@ -95,6 +95,8 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
     settings.skeletonESP.entities = TRY_READ(int, json, ["skeletonESP"]["entities"]);
 
     settings.lootESP.enabled = TRY_READ(bool, json, ["lootESP"]["enabled"]);
+    settings.lootESP.useFilter = TRY_READ(bool, json, ["lootESP"]["useFilter"]);
+    settings.lootESP.whitelist = TRY_READ(bool, json, ["lootESP"]["whitelist"]);
     settings.lootESP.distance = TRY_READ(float, json, ["lootESP"]["distance"]);
     std::vector<std::string> lootESPFilters{};
     TRY_READ_LIST(std::string, lootESPFilters, json, ["lootESP"]["filters"]);
@@ -102,7 +104,8 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
         settings.lootESP.filters.push_back(std::wstring{filter.begin(), filter.end()});
     }
 
-    settings.keybinds.toggleNoRecoil = TRY_READ(int, json, ["keybinds"]["toggleNoRecoil"]);
+    settings.keybinds.lootItemFilterWhitelistMode = TRY_READ(int, json, ["keybinds"]["lootItemFilterWhitelistMode"]);
+    settings.keybinds.addLootItemToFilters = TRY_READ(int, json, ["keybinds"]["addLootItemToFilters"]);
 
     settings.debug.enabled = TRY_READ(int, json, ["debug"]["enabled"]);
 
@@ -142,6 +145,8 @@ void Settings::Serialize() {
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["entities"], this->skeletonESP.entities);
 
     SET_JSON_VALUE(jsonSettings, ["lootESP"]["enabled"], this->lootESP.enabled);
+    SET_JSON_VALUE(jsonSettings, ["lootESP"]["useFilter"], this->lootESP.useFilter);
+    SET_JSON_VALUE(jsonSettings, ["lootESP"]["whitelist"], this->lootESP.whitelist);
     SET_JSON_VALUE(jsonSettings, ["lootESP"]["distance"], this->lootESP.distance);
     std::vector<std::string> lootESPFilters{};
     lootESPFilters.reserve(this->lootESP.filters.size());
@@ -151,7 +156,8 @@ void Settings::Serialize() {
 
     SET_LIST_VALUE(jsonSettings, lootESPFilters, ["lootESP"]["filters"]);
 
-    SET_JSON_VALUE(jsonSettings, ["keybinds"]["toggleNoRecoil"], this->keybinds.toggleNoRecoil);
+    SET_JSON_VALUE(jsonSettings, ["keybinds"]["lootItemFilterWhitelistMode"], this->keybinds.lootItemFilterWhitelistMode);
+    SET_JSON_VALUE(jsonSettings, ["keybinds"]["addLootItemToFilters"], this->keybinds.addLootItemToFilters);
 
     SET_JSON_VALUE(jsonSettings, ["debug"]["enabled"], this->debug.enabled);
 

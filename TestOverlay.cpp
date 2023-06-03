@@ -105,6 +105,7 @@ void TestOverlay::UpdateImGui() {
 			}
 
 			if (Global::gameWorld.address && Global::activeCamera.address) {
+				Hacks::DoKeybindActions();
 				Hacks::DoNoRecoil();
 			}
 		}

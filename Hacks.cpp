@@ -65,6 +65,38 @@ namespace Hacks {
         }
     }
 
+    void DoKeybindActions() {
+        if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.lootItemFilterWhitelistMode) & 1) {
+            Global::pSettings->lootESP.whitelist = !Global::pSettings->lootESP.whitelist;
+        }
+        
+        if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.addLootItemToFilters) & 1) {
+            std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
+            WorldLootItem* targetItem = nullptr;
+            float targetDistance = FLT_MAX;
+            for (WorldLootItem& item : loot) {
+                Vector3 screenPosition = Global::activeCamera.WorldToScreen(item.GetPosition());
+                if (screenPosition.z < 0.01f) {
+                    continue;
+                }
+
+                float distance = Vector2Distance(Global::centerScreen, *(Vector2*)&screenPosition);
+                if (distance < targetDistance) {
+                    targetDistance = distance;
+                    targetItem = &item;
+                }
+            }
+
+            if (targetItem) {
+                std::wstring name = targetItem->GetLocalizedName(nullptr);
+                if (IS_VALID_WSTRING(name) && std::find(Global::pSettings->lootESP.filters.begin(), Global::pSettings->lootESP.filters.end(), name) == Global::pSettings->lootESP.filters.end()) {
+                    Global::pSettings->lootESP.filters.push_back(targetItem->GetLocalizedName(nullptr));
+                    Global::pSettings->Serialize();
+                }
+            }
+        }
+    }
+
     void DrawMenuOptions() {
         if (ImGui::CollapsingHeader("Recoil")) {
             ImGui::Indent();
@@ -124,6 +156,8 @@ namespace Hacks {
                 ImGui::Indent();
                 ImGui::PushID("ESP_Loot");
                 ImGui::Checkbox("Enabled", &Global::pSettings->lootESP.enabled);
+                ImGui::Checkbox("Use Filter", &Global::pSettings->lootESP.useFilter);
+                ImGui::Checkbox("Whitelist", &Global::pSettings->lootESP.whitelist);
                 ImGui::DragFloat("Distance", &Global::pSettings->lootESP.distance);
                 ImGui::InputText("Filter", lootESPFilterInputBuffer, 255);
                 bool shouldClear = false;
@@ -166,14 +200,14 @@ namespace Hacks {
 
     void DrawPlayerESP() {
         std::vector<Player>& players = Global::gameWorld.GetPlayers();
-        int playerCount = players.size();
+        size_t playerCount = players.size();
         if (playerCount < 2) {
             return;
         }
 
         Vector3 localPlayerPosition = players[0].GetPosition();
         ProfileInfo& localPlayerInfo = players[0].GetProfileInfo();
-        for (int i = 1; i < playerCount; i++) {
+        for (size_t i = 1; i < playerCount; i++) {
             Player& player = players[i];
             ProfileInfo info = player.GetProfileInfo();
             Vector3 playerPosition = player.GetPosition();
@@ -278,7 +312,7 @@ namespace Hacks {
         }
 
         std::vector<Player>& players = Global::gameWorld.GetPlayers();
-        int playerCount = players.size();
+        size_t playerCount = players.size();
         if (playerCount <= 1) {
             return;
         }
@@ -286,7 +320,7 @@ namespace Hacks {
         std::vector<Player*> sortedPlayers{};
         Vector3 localPlayerPosition = players[0].GetPosition();
         ProfileInfo& localPlayerInfo = players[0].GetProfileInfo();
-        for (int i = 1; i < playerCount; i++) {
+        for (size_t i = 1; i < playerCount; i++) {
             ProfileInfo& info = players[i].GetProfileInfo();
             bool shouldDraw =
                 ((info.IsPlayer() && Global::pSettings->skeletonESP.types[0]) ||

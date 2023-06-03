@@ -6,6 +6,7 @@
 namespace Hacks {
 	extern bool isNoRecoilEnabled;
 	void DoNoRecoil();
+	void DoKeybindActions();
 	void DrawMenuOptions();
 	void DrawPlayerESP();
 	void DrawSkeletonESP();
