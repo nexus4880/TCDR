@@ -65,7 +65,10 @@ std::vector<WorldLootItem> GameWorld::GetLoot() {
 				if (!found) {
 					continue;
 				}
+
 			}
+
+
 			loot.push_back(WorldLootItem{addresses[i]});
 		}
 

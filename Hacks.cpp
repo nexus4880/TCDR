@@ -345,16 +345,17 @@ namespace Hacks {
 			alpha -= 1.f / static_cast<float>(entityCount);
 		}
 	}
-
+	std::string kuh = "Default Inventory";
 	void DrawLootESP() {
 		if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0) {
 			return;
 		}
+			Color lootesp = VIOLET;
 
-		size_t filtersCount = Global::pSettings->lootESP.filters.size();
 		std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
 		Vector3 localPlayerPosition = Global::gameWorld.GetPlayers()[0].GetPosition();
 		for (int i = 0; i < loot.size(); i++) {
+
 			Vector3 worldPosition = loot[i].GetPosition();
 			float distance = Vector3Distance(worldPosition, localPlayerPosition);
 			if (distance > Global::pSettings->lootESP.distance) {
@@ -368,10 +369,16 @@ namespace Hacks {
 
 			bool isLocalized = false;
 			std::wstring itemName = loot[i].GetLocalizedName(&isLocalized);
+			if (itemName == std::wstring(kuh.begin(), kuh.end()))
+			{
+				itemName = Utils::charToWstring("DEAD");
+				lootesp = GRAY;
+			}
+
 			if (!isLocalized) {
 				continue;
 			}
-
+			/*
 			if (filtersCount > 0) {
 				bool found = false;
 				for (size_t i = 0; i < filtersCount; i++) {
@@ -383,9 +390,9 @@ namespace Hacks {
 				if (!found) {
 					continue;
 				}
-			}
+			}*/
 
-			DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(), screenPosition.x, screenPosition.y, 1, VIOLET);
+			DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(), screenPosition.x, screenPosition.y, 1, lootesp);
 		}
 	}
 

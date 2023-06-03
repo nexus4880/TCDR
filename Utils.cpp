@@ -12,7 +12,7 @@
 
 namespace Utils {
     unsigned long GetProcessIdByName(const wchar_t* ProcName) {
-        PROCESSENTRY32 pe32{sizeof(PROCESSENTRY32)};
+        PROCESSENTRY32 pe32{ sizeof(PROCESSENTRY32) };
         HANDLE hSnapshot = NULL;
         unsigned long result = 0;
         hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -45,93 +45,93 @@ namespace Utils {
 
     const std::wstring GetRoleName(int role) {
         switch (role) {
-            case 5:
-            case 8:
-            case 12:
-            case 13:
-            case 14:
-            case 15:
-            case 16:
-            case 30:
-            {
-                return L"Minion";
-            }
-            case 0:
-            {
-                return L"Sniper";
-            }
-            case 1:
-            {
-                return L"Assault";
-            }
-            case 3:
-            {
-                return L"Reshala";
-            }
-            case 6:
-            {
-                return L"Killa";
-            }
-            case 7:
-            {
-                return L"P. Sherman";
-            }
-            case 9:
-            {
-                return L"Raider";
-            }
-            case 10:
-            {
-                return L"CAssault";
-            }
-            case 11:
-            {
-                return L"Gluhar";
-            }
-            case 17:
-            {
-                return L"Sanitar";
-            }
-            case 19:
-            {
-                return L"GAssault";
-            }
-            case 20:
-            {
-                return L"Cultist";
-            }
-            case 21:
-            {
-                return L"Priest";
-            }
-            case 22:
-            {
-                return L"Tagilla";
-            }
-            case 24:
-            {
-                return L"Rogue";
-            }
-            case 25:
-            {
-                return L"Santa";
-            }
-            case 26:
-            {
-                return L"Knight";
-            }
-            case 27:
-            {
-                return L"Big Pipe";
-            }
-            case 28:
-            {
-                return L"Bird Eye";
-            }
-            case 29:
-            {
-                return L"Sriracha";
-            }
+        case 5:
+        case 8:
+        case 12:
+        case 13:
+        case 14:
+        case 15:
+        case 16:
+        case 30:
+        {
+            return L"Minion";
+        }
+        case 0:
+        {
+            return L"Sniper";
+        }
+        case 1:
+        {
+            return L"Assault";
+        }
+        case 3:
+        {
+            return L"Reshala";
+        }
+        case 6:
+        {
+            return L"Killa";
+        }
+        case 7:
+        {
+            return L"P. Sherman";
+        }
+        case 9:
+        {
+            return L"Raider";
+        }
+        case 10:
+        {
+            return L"CAssault";
+        }
+        case 11:
+        {
+            return L"Gluhar";
+        }
+        case 17:
+        {
+            return L"Sanitar";
+        }
+        case 19:
+        {
+            return L"GAssault";
+        }
+        case 20:
+        {
+            return L"Cultist";
+        }
+        case 21:
+        {
+            return L"Priest";
+        }
+        case 22:
+        {
+            return L"Tagilla";
+        }
+        case 24:
+        {
+            return L"Rogue";
+        }
+        case 25:
+        {
+            return L"Santa";
+        }
+        case 26:
+        {
+            return L"Knight";
+        }
+        case 27:
+        {
+            return L"Big Pipe";
+        }
+        case 28:
+        {
+            return L"Bird Eye";
+        }
+        case 29:
+        {
+            return L"Sriracha";
+        }
         }
 
         return L"Unknown";
@@ -165,5 +165,13 @@ namespace Utils {
         std::transform(substrLower.begin(), substrLower.end(), substrLower.begin(), std::towlower);
 
         return strLower.find(substrLower) != std::wstring::npos;
+    }
+
+    std::wstring charToWstring(const char* input)
+    {
+        int length = MultiByteToWideChar(CP_UTF8, 0, input, -1, nullptr, 0);
+        std::wstring wideString(length, L'\0');
+        MultiByteToWideChar(CP_UTF8, 0, input, -1, &wideString[0], length);
+        return wideString;
     }
 }
