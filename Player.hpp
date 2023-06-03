@@ -23,10 +23,11 @@ public:
 	Color GetColor(ProfileInfo inRelationTo);
 	InventoryController GetInventoryController();
 	Item GetActiveWeapon();
+
+	uint64_t address;
 	float distance;
 	float distance2d;
 	bool isInImportantRange;
-	uint64_t address;
 
 private:
 	std::map<EBone, uint64_t> cachedBones;

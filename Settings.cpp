@@ -87,6 +87,9 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
     settings.boxESP.types[2] = TRY_READ(bool, json, ["boxESP"]["types"][2]);
     settings.boxESP.factor = TRY_READ(float, json, ["boxESP"]["factor"]);
 
+    settings.skeletonESP.types[0] = TRY_READ(bool, json, ["skeletonESP"]["types"][0]);
+    settings.skeletonESP.types[1] = TRY_READ(bool, json, ["skeletonESP"]["types"][1]);
+    settings.skeletonESP.types[2] = TRY_READ(bool, json, ["skeletonESP"]["types"][2]);
     settings.skeletonESP.distance = TRY_READ(float, json, ["skeletonESP"]["distance"]);
     settings.skeletonESP.closeFOV = TRY_READ(float, json, ["skeletonESP"]["closeFOV"]);
     settings.skeletonESP.entities = TRY_READ(int, json, ["skeletonESP"]["entities"]);
@@ -131,6 +134,9 @@ void Settings::Serialize() {
     SET_JSON_VALUE(jsonSettings, ["boxESP"]["types"][2], this->boxESP.types[2]);
     SET_JSON_VALUE(jsonSettings, ["boxESP"]["factor"], this->boxESP.factor);
 
+    SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["types"][0], this->skeletonESP.types[0]);
+    SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["types"][1], this->skeletonESP.types[1]);
+    SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["types"][2], this->skeletonESP.types[2]);
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["distance"], this->skeletonESP.distance);
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["closeFOV"], this->skeletonESP.closeFOV);
     SET_JSON_VALUE(jsonSettings, ["skeletonESP"]["entities"], this->skeletonESP.entities);

@@ -28,6 +28,8 @@ struct Settings {
 	};
 
 	struct SkeletonESP {
+		//			  player boss   AI
+		bool types[3]{ false, false, false };
 		float distance = 100.f;
 		float closeFOV = 100.f;
 		int entities = 10;
