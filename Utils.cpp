@@ -166,12 +166,4 @@ namespace Utils {
 
         return strLower.find(substrLower) != std::wstring::npos;
     }
-
-    std::wstring charToWstring(const char* input)
-    {
-        int length = MultiByteToWideChar(CP_UTF8, 0, input, -1, nullptr, 0);
-        std::wstring wideString(length, L'\0');
-        MultiByteToWideChar(CP_UTF8, 0, input, -1, &wideString[0], length);
-        return wideString;
-    }
 }

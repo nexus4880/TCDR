@@ -18,7 +18,6 @@ public:
 	std::wstring GetLocalizedName(bool* isLocalized);
 
 	uint64_t address;
-	
 private:
 	std::optional<uint64_t> cachedTransform;
 	std::optional<std::wstring> cachedId;

@@ -15,6 +15,8 @@
 
 #include <iostream>
 
+const std::wstring DEFAULT_INVENTORY = L"Default Inventory";
+
 namespace Hacks {
 	const char* snapLineModes[4]{ "Off", "Center", "Bottom", "Top" };
 	Vector4 minMaxValuesToWrite{ 0.f, 0.f, 0.f, 0.f };
@@ -345,54 +347,30 @@ namespace Hacks {
 			alpha -= 1.f / static_cast<float>(entityCount);
 		}
 	}
-	std::string kuh = "Default Inventory";
+
 	void DrawLootESP() {
 		if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0) {
 			return;
 		}
-			Color lootesp = VIOLET;
-
+		
 		std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
 		Vector3 localPlayerPosition = Global::gameWorld.GetPlayers()[0].GetPosition();
-		for (int i = 0; i < loot.size(); i++) {
-
+		for (size_t i = 0; i < loot.size(); i++) {
+			Color color = VIOLET;
 			Vector3 worldPosition = loot[i].GetPosition();
-			float distance = Vector3Distance(worldPosition, localPlayerPosition);
-			if (distance > Global::pSettings->lootESP.distance) {
-				continue;
-			}
-
 			Vector3 screenPosition = Global::activeCamera.WorldToScreen(worldPosition);
 			if (screenPosition.z < 0.01f) {
 				continue;
 			}
 
-			bool isLocalized = false;
-			std::wstring itemName = loot[i].GetLocalizedName(&isLocalized);
-			if (itemName == std::wstring(kuh.begin(), kuh.end()))
-			{
-				itemName = Utils::charToWstring("DEAD");
-				lootesp = GRAY;
+			float distance = Vector3Distance(localPlayerPosition, loot[i].GetPosition());
+			std::wstring itemName = loot[i].GetLocalizedName(nullptr);
+			if (itemName == DEFAULT_INVENTORY) {
+				itemName = L"DEAD";
+				color = GRAY;
 			}
 
-			if (!isLocalized) {
-				continue;
-			}
-			/*
-			if (filtersCount > 0) {
-				bool found = false;
-				for (size_t i = 0; i < filtersCount; i++) {
-					if (Utils::ContainsIgnoreCase(itemName, Global::pSettings->lootESP.filters[i])) {
-						found = true;
-					}
-				}
-
-				if (!found) {
-					continue;
-				}
-			}*/
-
-			DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(), screenPosition.x, screenPosition.y, 1, lootesp);
+			DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(), screenPosition.x, screenPosition.y, 1, color);
 		}
 	}
 

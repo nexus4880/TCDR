@@ -16,8 +16,8 @@ public:
 
 	static GameWorld Get();
 
-	std::vector<Player> GetPlayers();
-	std::vector<WorldLootItem> GetLoot();
+	std::vector<Player>& GetPlayers();
+	std::vector<WorldLootItem>& GetLoot();
 
 	uint64_t address;
 

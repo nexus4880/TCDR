@@ -12,5 +12,4 @@ namespace Utils {
 	bool IsValidWChar(wchar_t value);
 	unsigned int HashString(const std::string& input);
 	bool ContainsIgnoreCase(const std::wstring& str, const std::wstring& substr);
-	std::wstring charToWstring(const char* input);
 }
