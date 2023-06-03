@@ -65,13 +65,9 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 		nlohmann::json json_data{};
 		fs >> json_data;
 		for (auto& element : json_data.items()) {
-			if (element.value().is_string()) {
-				if (element.value().is_string()) {
-					std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-					std::wstring key = conv.from_bytes(element.key());
-					Global::itemTemplates[key] = element.value().get<std::wstring>();
-				}
-			}
+			std::string keyStr = element.key();
+			std::wstring key{keyStr.begin(), keyStr.end()};
+			Global::itemTemplates[key] = element.value().get<std::wstring>();
 		}
 	}
 	else {
