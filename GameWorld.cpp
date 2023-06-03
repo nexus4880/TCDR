@@ -3,6 +3,7 @@
 #include "Global.hpp"
 #include "Utils.h"
 #include <raymath.h>
+#include "mdissect/mdissect.hpp"
 
 GameWorld GameWorld::Get() {
 	uint64_t gameWorldAddressGameObject = Global::gom.GetActiveObjects().GetObject("GameWorld");
@@ -48,6 +49,11 @@ std::vector<WorldLootItem>& GameWorld::GetLoot() {
 		loot.reserve(length);
 		Vector3 localPlayerPosition = Global::gameWorld.GetPlayers()[0].GetPosition();
 		for (size_t i = 0; i < length; i++) {
+			std::string className = mdissect::mono_object{ addresses[i] }.vtable().mono_class().name();
+			if (className != "ObservedLootItem" && className != "Corpse") {
+				continue;
+			}
+
 			bool isLocalized = false;
 			WorldLootItem lootItem{ addresses[i] };
 			std::wstring itemName = lootItem.GetLocalizedName(&isLocalized);

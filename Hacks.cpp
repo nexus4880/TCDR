@@ -16,7 +16,7 @@
 #include "Utils.h"
 #include "WinWrapper.h"
 
-const std::wstring DEFAULT_INVENTORY = L"Default Inventory";
+const std::wstring DEFAULT_INVENTORY_ID = L"55d7217a4bdc2d86028b456d";
 
 namespace Hacks {
     const char* snapLineModes[4]{ "Off", "Center", "Bottom", "Top" };
@@ -383,10 +383,13 @@ namespace Hacks {
             }
 
             float distance = Vector3Distance(localPlayerPosition, loot[i].GetPosition());
-            std::wstring itemName = loot[i].GetLocalizedName(nullptr);
-            if (itemName == DEFAULT_INVENTORY) {
+            std::wstring itemName = NULL_WSTRING;
+            if (loot[i].GetId() == DEFAULT_INVENTORY_ID) {
                 itemName = L"DEAD";
                 color = GRAY;
+            }
+            else {
+                itemName = loot[i].GetLocalizedName(nullptr);
             }
 
             DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(),
