@@ -80,6 +80,7 @@
     <ClCompile Include="BasicMemoryInterface.cpp" />
     <ClCompile Include="DriverInterop.cpp" />
     <ClCompile Include="EFTCamera.cpp" />
+    <ClCompile Include="FirearmController.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="Global.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="DriverInterop.h" />
     <ClInclude Include="EFTCamera.hpp" />
     <ClInclude Include="EquipmentSlot.hpp" />
+    <ClInclude Include="FirearmController.hpp" />
     <ClInclude Include="GameObjectManager.hpp" />
     <ClInclude Include="GameWorld.hpp" />
     <ClInclude Include="Global.hpp" />

@@ -254,7 +254,7 @@ namespace Hacks {
                     stream << L"\n";
                 }
 
-                stream << player.GetActiveWeapon().GetTemplate().GetLocalizedName().c_str() << L" ";
+                stream << player.GetFirearmController().GetItem().GetTemplate().GetLocalizedName().c_str() << L" ";
             }
 
             float test = distance / Global::pSettings->skeletonESP.distance;
@@ -368,7 +368,7 @@ namespace Hacks {
     }
 
     void DrawLootESP() {
-        if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0) {
+        if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0 || Global::gameWorld.GetPlayers()[0].GetFirearmController().IsAiming()) {
             return;
         }
 

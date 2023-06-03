@@ -93,6 +93,9 @@
     <ClCompile Include="mdissect\mdissect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FirearmController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicMemoryInterface.h">
@@ -180,6 +183,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mdissect\offsets.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FirearmController.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

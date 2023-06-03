@@ -8,6 +8,7 @@
 #include "Bones.hpp"
 #include <map>
 #include <optional>
+#include "FirearmController.hpp"
 
 const int BONE_PATH_SIZE = 21;
 
@@ -22,7 +23,7 @@ public:
 	void DrawBones(float alpha, ProfileInfo& localPlayerInfo);
 	Color GetColor(ProfileInfo inRelationTo);
 	InventoryController GetInventoryController();
-	Item GetActiveWeapon();
+	FirearmController GetFirearmController();
 
 	uint64_t address;
 	float distance;

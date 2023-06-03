@@ -142,6 +142,6 @@ InventoryController Player::GetInventoryController() {
 	return this->cachedInventoryController.value();
 }
 
-Item Player::GetActiveWeapon() {
-	return Item{ Memory::ReadChain<uint64_t>(Global::pMemoryInterface, this->address, {0x570, 0x60}) };
+FirearmController Player::GetFirearmController() {
+	return FirearmController{ Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x570) };
 }
