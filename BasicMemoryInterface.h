@@ -15,7 +15,7 @@ public:
     bool UpdateProcessId(const wchar_t* processName);
     uint64_t GetBaseAddress();
     bool ReadRaw(uint64_t address, void* pBuffer, unsigned long size);
-    bool WriteRaw(uint64_t address, void* pBuffer, unsigned long size);
+    bool WriteRaw(uint64_t address, const void* pBuffer, unsigned long size);
     uint64_t GetModuleBase();
     bool SetTargetModule(wchar_t* moduleName);
 private:

@@ -19,6 +19,7 @@
 #include "Utils.h"
 #include <locale>
 #include <codecvt>
+#include "mdissect/mdissect.hpp"
 
 namespace nlohmann {
 	template <>
@@ -76,6 +77,14 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 	else {
 		printf_s("Missing items.json?\n");
 	}
+
+	mdissect::read_memory = [](uint64_t address, void* buffer, size_t size) -> bool {
+		return Global::pMemoryInterface->ReadRaw(address, buffer, size);
+	};
+
+	mdissect::write_memory = [](uint64_t address, const void* buffer, size_t size) -> bool {
+		return Global::pMemoryInterface->WriteRaw(address, buffer, size);
+	};
 }
 
 TestOverlay::~TestOverlay() {

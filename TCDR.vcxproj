@@ -88,6 +88,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemTemplate.cpp" />
     <ClCompile Include="ListNode.cpp" />
+    <ClCompile Include="mdissect\mdissect.cpp" />
     <ClCompile Include="Offsets.cpp" />
     <ClCompile Include="Overlay.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -118,6 +119,8 @@
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="ItemTemplate.hpp" />
     <ClInclude Include="ListNode.hpp" />
+    <ClInclude Include="mdissect\mdissect.hpp" />
+    <ClInclude Include="mdissect\offsets.hpp" />
     <ClInclude Include="Offsets.hpp" />
     <ClInclude Include="Overlay.h" />
     <ClInclude Include="Player.hpp" />
