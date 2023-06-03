@@ -1,17 +1,21 @@
 #pragma once
 
 #include <numbers>
+#include <string>
+#include <optional>
 
 class ItemTemplate {
 public:
-	ItemTemplate(intptr_t address) {
+	ItemTemplate(uint64_t address) {
 		this->address = address;
 	}
 
-	wchar_t* GetId();
-	wchar_t* GetName();
-	wchar_t* GetShortName();
-	bool IsQuestItem();
+	std::wstring GetId();
+	std::wstring GetLocalizedName();
 
-	intptr_t address;
+	uint64_t address;
+
+private:
+	std::optional<std::wstring> cachedId;
+	std::optional<std::wstring> cachedLocalizedName;
 };

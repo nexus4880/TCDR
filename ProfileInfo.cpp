@@ -18,25 +18,43 @@ int ProfileInfo::GetRegistrationDate() {
 	return this->cachedRegistrationDate.value();
 }
 
-wchar_t* ProfileInfo::GetNickname() {
-	if (!this->cachedNickname) {
-		this->cachedNickname = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x10));
+std::wstring ProfileInfo::GetNickname() {
+	if (!this->cachedNickname.has_value()) {
+		this->cachedNickname = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x10));
 	}
 
-	return this->cachedNickname;
+	return this->cachedNickname.value();
 }
 
-wchar_t* ProfileInfo::GetGroupID() {
+std::wstring ProfileInfo::GetGroupID() {
 	if (!this->cachedGroupID.has_value()) {
-		this->cachedGroupID = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x20));
+		this->cachedGroupID = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x20));
 	}
 
 	return this->cachedGroupID.value();
 }
 
+std::wstring ProfileInfo::GetGroupHash() {
+	if (!this->cachedGroupHash.has_value()) {
+		std::wstring id = this->GetGroupID();
+		if (IS_VALID_WSTRING(id)) {
+			std::string idStr(id.begin(), id.end());
+			unsigned int hash = Utils::HashString(idStr);
+			id = std::to_wstring(hash % 100000);
+		}
+		else {
+			id = NULL_WSTRING;
+		}
+
+		this->cachedGroupHash = id;
+	}
+
+	return this->cachedGroupHash.value();
+}
+
 ProfileSettings ProfileInfo::GetSettings() {
 	if (!this->cachedProfileSettings.has_value()) {
-		this->cachedProfileSettings = ProfileSettings{Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x50)};
+		this->cachedProfileSettings = ProfileSettings{Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x50)};
 	}
 
 	return this->cachedProfileSettings.value();

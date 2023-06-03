@@ -2,18 +2,24 @@
 #include "Global.hpp"
 #include "ItemTemplate.hpp"
 
-wchar_t* ItemTemplate::GetId() {
-	return Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x50));
+std::wstring ItemTemplate::GetId() {
+	if (!this->cachedId.has_value()) {
+		this->cachedId = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x50));
+	}
+
+	return this->cachedId.value();
 }
 
-wchar_t* ItemTemplate::GetName() {
-	return Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x10));
-}
+std::wstring ItemTemplate::GetLocalizedName() {
+	if (!this->cachedLocalizedName.has_value()) {
+		std::wstring templateId = this->GetId();
+		if (Global::itemTemplates.contains(templateId)) {
+			this->cachedLocalizedName = Global::itemTemplates[templateId];
+		}
+		else {
+			this->cachedLocalizedName = L"unlocalized_weapon";
+		}
+	}
 
-wchar_t* ItemTemplate::GetShortName() {
-	return Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x18));
-}
-
-bool ItemTemplate::IsQuestItem() {
-	return Memory::ReadValue<bool>(Global::pMemoryInterface, this->address + 0x9C);
+	return this->cachedLocalizedName.value();
 }

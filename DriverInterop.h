@@ -9,12 +9,12 @@ public:
     DriverInterop(const DriverInterop& interop) = delete;
     ~DriverInterop();
 
-    bool ReadRaw(intptr_t address, void* pBuffer, unsigned long size);
-    bool WriteRaw(intptr_t address, void* pBuffer, unsigned long size);
+    bool ReadRaw(uint64_t address, void* pBuffer, unsigned long size);
+    bool WriteRaw(uint64_t address, void* pBuffer, unsigned long size);
 
     bool UpdateProcessId(const wchar_t* processName);
-    intptr_t GetBaseAddress();
-    intptr_t GetModuleBase();
+    uint64_t GetBaseAddress();
+    uint64_t GetModuleBase();
     bool SetTargetModule(wchar_t* moduleName);
 
 private:

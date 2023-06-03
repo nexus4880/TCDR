@@ -7,14 +7,14 @@
 
 class InventoryController {
 public:
-	InventoryController(intptr_t address) {
+	InventoryController(uint64_t address) {
 		this->address = address;
 	}
 
 	bool IsInInventory();
 	Slot GetSlot(EquipmentSlot slot);
 
-	intptr_t address;
+	uint64_t address;
 
 private:
 	bool hasReadAll = false;

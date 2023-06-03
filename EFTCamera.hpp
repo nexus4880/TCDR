@@ -9,12 +9,12 @@ public:
 	EFTCamera() : EFTCamera(0) {
 	}
 
-	EFTCamera(intptr_t address) {
+	EFTCamera(uint64_t address) {
 		this->address = address;
 	}
 
 	Matrix GetMatrix() const;
 	Vector3 WorldToScreen(Vector3 point) const;
 
-	intptr_t address;
+	uint64_t address;
 };

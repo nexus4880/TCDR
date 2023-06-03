@@ -1,33 +1,33 @@
 #include "Offsets.hpp"
 
 namespace Offsets {
-	intptr_t GOM = 0x017FFD28;
+	uint64_t GOM = 0x017FFD28;
 
 	namespace GameObjectManager {
-		intptr_t TaggedObjects = 0x8;
-		intptr_t ActiveObjects = 0x20;
+		uint64_t TaggedObjects = 0x8;
+		uint64_t ActiveObjects = 0x20;
 	}
 
 	namespace GameWorld {
-		intptr_t RegisteredPlayers = 0xA0;
+		uint64_t RegisteredPlayers = 0xA0;
 	}
 
 	namespace List {
-		intptr_t Base = 0x0010;
-		intptr_t Count = 0x0018;
-		intptr_t FirstEntry = 0x0020;
+		uint64_t Base = 0x0010;
+		uint64_t Count = 0x0018;
+		uint64_t FirstEntry = 0x0020;
 	}
 
 	namespace Player {
-		intptr_t InventoryController = 0x568;
+		uint64_t InventoryController = 0x568;
 	}
 
 	namespace InventoryController {
-		intptr_t InventoryClass = 0x130;
-		intptr_t IsInInventory = 0x178;
+		uint64_t InventoryClass = 0x130;
+		uint64_t IsInInventory = 0x178;
 	}
 
 	namespace InventoryClass {
-		intptr_t EquipmentClass = 0x10;
+		uint64_t EquipmentClass = 0x10;
 	}
 }

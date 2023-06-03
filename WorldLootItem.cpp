@@ -1,43 +1,42 @@
 #include "IMemoryInterface.h"
 #include "Global.hpp"
 #include "WorldLootItem.hpp"
-
-bool WorldLootItem::IsContainer() {
-	if (!this->cachedIsContainer.has_value()) {
-		this->cachedIsContainer = Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x18) == 0;
-	}
-
-	return this->cachedIsContainer.value();
-}
+#include "Hacks.hpp"
 
 Vector3 WorldLootItem::GetPosition() {
-	if (!this->cachedTransformAddress) {
-		this->cachedTransformAddress = Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x10);
+	if (!this->cachedTransform.has_value()) {
+		this->cachedTransform = Memory::ReadChain<uint64_t>(Global::pMemoryInterface, this->address, { 0x10, 0x30, 0x30, 0x8, 0x28, 0x10 });
 	}
 
-	return Memory::ReadValue<Vector3>(Global::pMemoryInterface, this->cachedTransformAddress + 0xA90);
+	return Hacks::ReadPosition(this->cachedTransform.value());
 }
 
-std::optional<std::wstring> WorldLootItem::GetId() {
+std::wstring WorldLootItem::GetId() {
 	if (!this->cachedId.has_value()) {
-		wchar_t* readString = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<intptr_t>(Global::pMemoryInterface, this->address + 0x68));
-		if (readString) {
-			this->cachedId = readString;
+		this->cachedId = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x68));
+	}
+
+	return this->cachedId.value();
+}
+
+std::wstring WorldLootItem::GetLocalizedName(bool* isLocalized) {
+	if (!this->cachedLocalizedName.has_value()) {
+		std::wstring id = this->GetId();
+		if (Global::itemTemplates.contains(id)) {
+			if (isLocalized) {
+				*isLocalized = true;
+			}
+
+			this->cachedLocalizedName = Global::itemTemplates[id];
 		}
 		else {
-			this->cachedId = std::nullopt;
+			if (isLocalized) {
+				*isLocalized = false;
+			}
+
+			this->cachedLocalizedName = UNLOCALIZED_ITEM;
 		}
 	}
 
-	return this->cachedId;
-}
-
-std::optional<std::wstring> WorldLootItem::GetLocalizedName() {
-	if (!this->cachedLocalizedName.has_value()) {
-		if (this->GetId().has_value()) {
-			this->cachedLocalizedName = Global::itemTemplates[this->GetId().value()];
-		}
-	}
-
-	return this->cachedLocalizedName;
+	return this->cachedLocalizedName.value();
 }

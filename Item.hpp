@@ -6,7 +6,7 @@
 
 class Item {
 public:
-	Item(intptr_t address) {
+	Item(uint64_t address) {
 		this->address = address;
 	}
 
@@ -14,7 +14,7 @@ public:
 	bool IsUnlimited();
 	ItemTemplate GetTemplate();
 	
-	intptr_t address;
+	uint64_t address;
 	
 private:
 	std::optional<ItemTemplate> cachedTemplate = std::nullopt;

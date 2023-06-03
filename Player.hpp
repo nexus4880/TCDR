@@ -9,30 +9,31 @@
 #include <map>
 #include <optional>
 
-#define BONE_PATH_SIZE 21
+const int BONE_PATH_SIZE = 21;
 
 class Player {
 public:
-	Player(intptr_t address);
+	Player(uint64_t address);
 
 	ProfileInfo GetProfileInfo();
-	intptr_t GetSkeletonTransformListValues();
+	uint64_t GetSkeletonTransformListValues();
 	Vector3 GetPosition();
 	Vector3 GetBone(EBone bone);
 	void DrawBones(float alpha, ProfileInfo& localPlayerInfo);
 	Color GetColor(ProfileInfo inRelationTo);
 	InventoryController GetInventoryController();
 	Item GetActiveWeapon();
+
+	uint64_t address;
 	float distance;
 	float distance2d;
 	bool isInImportantRange;
-	intptr_t address;
 
 private:
-	std::map<EBone, intptr_t> cachedBones;
+	std::map<EBone, uint64_t> cachedBones;
 	std::optional<ProfileInfo> cachedProfileInfo = std::nullopt;
-	intptr_t cachedEFTPlayerClassAddress;
-	intptr_t cachedTransformAddress;
+	uint64_t cachedEFTPlayerClassAddress;
+	uint64_t cachedTransformAddress;
 	std::optional<InventoryController> cachedInventoryController = std::nullopt;
 	std::optional<Color> cachedColor = std::nullopt;
 

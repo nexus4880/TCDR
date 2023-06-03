@@ -3,7 +3,7 @@
 #include <Psapi.h>
 #include "Utils.h"
 
-#define PRIMITIVES_ONLY
+#define PRIMITIVES_ONLY 1
 #include "Global.hpp"
 
 BasicMemoryInterface::~BasicMemoryInterface() {
@@ -30,7 +30,7 @@ bool BasicMemoryInterface::UpdateProcessId(const wchar_t* processName) {
     return this->pid && this->handle;
 }
 
-intptr_t BasicMemoryInterface::GetBaseAddress() {
+uint64_t BasicMemoryInterface::GetBaseAddress() {
     if (!this->pid || !this->handle) {
         return false;
     }
@@ -58,7 +58,7 @@ intptr_t BasicMemoryInterface::GetBaseAddress() {
     return baseAddress;
 }
 
-intptr_t BasicMemoryInterface::GetModuleBase() {
+uint64_t BasicMemoryInterface::GetModuleBase() {
     return 0x7FFD7EA50000;
 }
 
@@ -66,8 +66,7 @@ bool BasicMemoryInterface::SetTargetModule(wchar_t* moduleName) {
     throw("DRIVER USE ONLY!");
 }
 
-bool BasicMemoryInterface::ReadRaw(intptr_t address, void* pBuffer, unsigned long size) {
-    Global::readCalls[Global::currentFrame]++;
+bool BasicMemoryInterface::ReadRaw(uint64_t address, void* pBuffer, unsigned long size) {
     if (!this->pid || !this->handle || address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
@@ -75,8 +74,7 @@ bool BasicMemoryInterface::ReadRaw(intptr_t address, void* pBuffer, unsigned lon
     return ReadProcessMemory(this->handle, (LPCVOID)address, pBuffer, size, nullptr);
 }
 
-bool BasicMemoryInterface::WriteRaw(intptr_t address, void* pBuffer, unsigned long size) {
-    Global::writeCalls[Global::currentFrame]++;
+bool BasicMemoryInterface::WriteRaw(uint64_t address, void* pBuffer, unsigned long size) {
     if (!this->pid || !this->handle || address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }

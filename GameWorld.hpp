@@ -6,21 +6,20 @@
 #include <numbers>
 #include <vector>
 #include <optional>
-#include <tuple>
 #include "Player.hpp"
 
 class GameWorld {
 public:
-	GameWorld(intptr_t address) {
+	GameWorld(uint64_t address) {
 		this->address = address;
 	}
 
 	static GameWorld Get();
 
-	std::vector<Player> GetPlayers();
-	std::vector<WorldLootItem> GetLoot();
+	std::vector<Player>& GetPlayers();
+	std::vector<WorldLootItem>& GetLoot();
 
-	intptr_t address;
+	uint64_t address;
 
 private:
 	std::optional<std::vector<Player>> cachedPlayers = std::nullopt;

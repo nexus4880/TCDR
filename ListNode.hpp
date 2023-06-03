@@ -3,8 +3,8 @@
 #include <numeric>
 
 struct ListNode {
-	intptr_t first;
-	intptr_t last;
+	uint64_t first;
+	uint64_t last;
 
-	intptr_t GetObject(const char* objectName);
+	uint64_t GetObject(const char* objectName);
 };

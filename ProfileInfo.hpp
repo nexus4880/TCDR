@@ -2,6 +2,7 @@
 
 #include <numbers>
 #include <optional>
+#include <string>
 #include "ProfileSettings.hpp"
 
 /*    [00][C] Default : System.Int32
@@ -32,26 +33,28 @@ enum EMemberCategory {
 
 class ProfileInfo {
 public:
-	ProfileInfo(intptr_t address) {
+	ProfileInfo(uint64_t address) {
 		this->address = address;
 	}
 
 	unsigned char GetSide();
 	int GetRegistrationDate();
-	wchar_t* GetNickname();
-	wchar_t* GetGroupID();
+	std::wstring GetNickname();
+	std::wstring GetGroupID();
+	std::wstring GetGroupHash();
 	ProfileSettings GetSettings();
 	bool IsPlayer();
 	bool IsBoss();
 	EMemberCategory GetMemberCategory();
 
-	intptr_t address;
+	uint64_t address;
 
 private:
 	std::optional<unsigned char> cachedSide = std::nullopt;
 	std::optional<int> cachedRegistrationDate = std::nullopt;
-	wchar_t* cachedNickname = nullptr;
-	std::optional<wchar_t*> cachedGroupID = std::nullopt;
+	std::optional<std::wstring> cachedNickname = std::nullopt;
+	std::optional<std::wstring> cachedGroupID = std::nullopt;
+	std::optional<std::wstring> cachedGroupHash = std::nullopt;
 	std::optional<ProfileSettings> cachedProfileSettings = std::nullopt;
 	std::optional<EMemberCategory> cachedMemberCategory = std::nullopt;
 };

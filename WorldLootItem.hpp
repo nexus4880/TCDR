@@ -5,22 +5,21 @@
 #include <raylib.h>
 #include <string>
 
+const std::wstring UNLOCALIZED_ITEM = L"unlocalized_item";
+
 class WorldLootItem {
 public:
-	WorldLootItem(intptr_t address) : cachedTransformAddress(0) {
+	WorldLootItem(uint64_t address) {
 		this->address = address;
 	}
 
-	bool IsContainer();
 	Vector3 GetPosition();
-	std::optional<std::wstring> GetId();
-	std::optional<std::wstring> GetLocalizedName();
+	std::wstring GetId();
+	std::wstring GetLocalizedName(bool* isLocalized);
 
-	intptr_t address;
-	
+	uint64_t address;
 private:
-	std::optional<bool> cachedIsContainer = std::nullopt;
-	intptr_t cachedTransformAddress;
+	std::optional<uint64_t> cachedTransform;
 	std::optional<std::wstring> cachedId;
 	std::optional<std::wstring> cachedLocalizedName;
 };
