@@ -5,30 +5,18 @@
 #include <string>
 #include "ProfileSettings.hpp"
 
-/*    [00][C] Default : System.Int32
-    [00][C] Developer : System.Int32
-    [00][C] UniqueId : System.Int32
-    [00][C] Trader : System.Int32
-    [00][C] Group : System.Int32
-    [00][C] System : System.Int32
-    [00][C] ChatModerator : System.Int32
-    [00][C] ChatModeratorWithPermanentBan : System.Int32
-    [00][C] UnitTest : System.Int32
-    [00][C] Sherpa : System.Int32
-    [00][C] Emissary : System.Int32*/
-
 enum EMemberCategory {
-	Default,
-	Developer,
-	UniqueId,
-	Trader,
-	Group,
-	System,
-	ChatModerator,
-	ChatModeratorWithPermanentBan,
-	UnitTest,
-	Sherpa,
-	Emissary
+	Default = 0,
+	Developer = 1,
+	UniqueId = 2,
+	Trader = 4,
+	Group = 8,
+	System = 16,
+	ChatModerator = 32,
+	ChatModeratorWithPermanentBan = 64,
+	UnitTest = 128,
+	Sherpa = 256,
+	Emissary = 512
 };
 
 class ProfileInfo {
