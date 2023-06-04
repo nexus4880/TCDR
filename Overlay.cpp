@@ -2,10 +2,9 @@
 #include <raylib.h>
 #include "rlImGui.h"
 #include "WinWrapper.h"
-
 #include <iostream>
 
-Overlay::Overlay(const char* title, int updateRate) : title(title), isMenuOpen(false) {
+Overlay::Overlay(const std::string title, int updateRate) : title(title), isMenuOpen(false) {
 	SetConfigFlags(
 		ConfigFlags::FLAG_MSAA_4X_HINT |
 		ConfigFlags::FLAG_WINDOW_UNDECORATED |
@@ -41,13 +40,12 @@ Overlay::~Overlay() {
 }
 
 void Overlay::Update() {
-	if (
-		IsWindowFocused() ?
+	bool isHomePressed = IsWindowFocused() ?
 		IsKeyPressed(KeyboardKey::KEY_HOME) :
-		WinWrapper::WGetAsyncKeyState(0x24) & 1
-		)
-	{
-		if ((this->isMenuOpen = !this->isMenuOpen) == true) {
+		WinWrapper::WGetAsyncKeyState(0x24) & 1;
+	if (isHomePressed) {
+		this->isMenuOpen = !this->isMenuOpen;
+		if (this->isMenuOpen) {
 			ClearWindowState(ConfigFlags::FLAG_WINDOW_MOUSE_PASSTHROUGH);
 			WinWrapper::WSetForegroundWindow(GetWindowHandle());
 			this->OnFocusFound();
@@ -71,7 +69,7 @@ void Overlay::Draw() {
 	if (shouldShow) {
 		ImGui::GetIO().MouseDrawCursor = true;
 		needsEnd = ImGui::Begin(
-			this->title,
+			this->title.c_str(),
 			nullptr,
 			ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse
 		);

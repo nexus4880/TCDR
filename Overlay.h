@@ -1,9 +1,11 @@
 #pragma once
 
+#include <string>
+
 class Overlay
 {
 public:
-	Overlay(const char* title, int updateRate);
+	Overlay(const std::string title, int updateRate);
 	~Overlay();
 	virtual void UpdateImGui() {
 	}
@@ -22,5 +24,5 @@ public:
 
 	bool isMenuOpen;
 private:
-	const char* title;
+	const std::string title;
 };
