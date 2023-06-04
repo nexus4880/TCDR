@@ -13,4 +13,5 @@ namespace Hacks {
 	void DrawLootESP();
 
 	Vector3 ReadPosition(uint64_t transform);
+	uint64_t GetComponentFromGameObject(uint64_t gameObject, const char* targetComponentName);
 }

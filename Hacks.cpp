@@ -472,4 +472,21 @@ namespace Hacks {
 
         return Vector3(result.m128_f32[0], result.m128_f32[1], result.m128_f32[2]);
     }
+
+    uint64_t GetComponentFromGameObject(uint64_t gameObject, const char* targetComponentName) {
+        char nameBuffer[255];
+        uintptr_t object = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, gameObject + 0x30);
+        object = Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, object + 0x30);
+        for (int i = 0x8; i < 0x300; i += 0x10) {
+            uint64_t fields = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, object + i) + 0x28);
+            uint64_t name = Memory::ReadChain<uint64_t>(Global::pMemoryInterface, fields, { 0x0, 0x0, 0x48 });
+            memset(nameBuffer, '\0', 255);
+            Global::pMemoryInterface->ReadRaw(name, &nameBuffer, 18);
+            if (strcmp(nameBuffer, targetComponentName) == 0) {
+                return fields;
+            }
+        }
+
+        return 0;
+    }
 }
