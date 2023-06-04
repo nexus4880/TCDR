@@ -50,7 +50,7 @@ std::vector<WorldLootItem>& GameWorld::GetLoot() {
 		Vector3 localPlayerPosition = Global::gameWorld.GetPlayers()[0].GetPosition();
 		for (size_t i = 0; i < length; i++) {
 			std::string className = mdissect::mono_object{ addresses[i] }.vtable().mono_class().name();
-			bool isCorpse = className == "Corpse";
+			bool isCorpse = className == "ObservedCorpse" || className == "Corpse";
 			if (className != "ObservedLootItem" && !isCorpse) {
 				continue;
 			}
@@ -69,20 +69,20 @@ std::vector<WorldLootItem>& GameWorld::GetLoot() {
 				}
 
 				if (Global::pSettings->lootESP.useFilter && filtersCount > 0) {
-					bool found = !Global::pSettings->lootESP.whitelist;
+					bool found = false;
 					for (size_t i = 0; i < filtersCount; i++) {
 						if (Utils::ContainsIgnoreCase(itemName, Global::pSettings->lootESP.filters[i])) {
-							found = !found;
+							found = true;
 							break;
 						}
 					}
 
-					if (!found) {
+					if (!found && Global::pSettings->lootESP.whitelist || found && !Global::pSettings->lootESP.whitelist) {
 						continue;
 					}
 				}
 			}
-
+			
 			loot.push_back(lootItem);
 		}
 
