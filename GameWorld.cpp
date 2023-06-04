@@ -3,6 +3,7 @@
 #include "Global.hpp"
 #include "Utils.h"
 #include <raymath.h>
+#include "mdissect/mdissect.hpp"
 
 GameWorld GameWorld::Get() {
 	uint64_t gameWorldAddressGameObject = Global::gom.GetActiveObjects().GetObject("GameWorld");
@@ -48,32 +49,40 @@ std::vector<WorldLootItem>& GameWorld::GetLoot() {
 		loot.reserve(length);
 		Vector3 localPlayerPosition = Global::gameWorld.GetPlayers()[0].GetPosition();
 		for (size_t i = 0; i < length; i++) {
-			bool isLocalized = false;
-			WorldLootItem lootItem{ addresses[i] };
-			std::wstring itemName = lootItem.GetLocalizedName(&isLocalized);
-			if (!isLocalized) {
+			std::string className = mdissect::mono_object{ addresses[i] }.vtable().mono_class().name();
+			bool isCorpse = className == "ObservedCorpse" || className == "Corpse";
+			if (className != "ObservedLootItem" && !isCorpse) {
 				continue;
 			}
 
+			WorldLootItem lootItem{ addresses[i] };
 			float distance = Vector3Distance(localPlayerPosition, lootItem.GetPosition());
 			if (distance > Global::pSettings->lootESP.distance) {
 				continue;
 			}
 
-			if (filtersCount > 0)  {
-				bool found = false;
-				for (size_t i = 0; i < filtersCount; i++) {
-					if (Utils::ContainsIgnoreCase(itemName, Global::pSettings->lootESP.filters[i])) {
-						found = true;
-						break;
-					}
-				}
-
-				if (!found) {
+			if (!isCorpse) {
+				bool isLocalized = false;
+				std::wstring itemName = lootItem.GetLocalizedName(&isLocalized);
+				if (!isLocalized) {
 					continue;
 				}
-			}
 
+				if (Global::pSettings->lootESP.useFilter && filtersCount > 0) {
+					bool found = false;
+					for (size_t i = 0; i < filtersCount; i++) {
+						if (Utils::ContainsIgnoreCase(itemName, Global::pSettings->lootESP.filters[i])) {
+							found = true;
+							break;
+						}
+					}
+
+					if (!found && Global::pSettings->lootESP.whitelist || found && !Global::pSettings->lootESP.whitelist) {
+						continue;
+					}
+				}
+			}
+      
 			loot.push_back(lootItem);
 		}
 

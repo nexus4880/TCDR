@@ -6,16 +6,16 @@
 
 class Item {
 public:
-	Item(uint64_t address) {
-		this->address = address;
+	Item(uint64_t address)
+		: address(address)
+	{
 	}
 
 	int GetVersion();
 	bool IsUnlimited();
 	ItemTemplate GetTemplate();
 	
-	uint64_t address;
-	
 private:
+	uint64_t address;
 	std::optional<ItemTemplate> cachedTemplate = std::nullopt;
 };

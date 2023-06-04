@@ -37,12 +37,16 @@ struct Settings {
 
 	struct LootESP {
 		bool enabled = false;
+		bool useFilter = false;
+		bool whitelist = true;
 		float distance = 300.f;
 		std::vector<std::wstring> filters;
 	};
 
 	struct Keybinds {
-		int toggleNoRecoil = 0x77;
+		int toggleLootESPEnabled = 0x07;
+		int lootItemFilterWhitelistMode = 0x07;
+		int addLootItemToFilters = 0x07;
 	};
 
 	struct Debug {

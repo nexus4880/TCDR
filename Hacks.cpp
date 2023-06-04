@@ -16,7 +16,7 @@
 #include "Utils.h"
 #include "WinWrapper.h"
 
-const std::wstring DEFAULT_INVENTORY = L"Default Inventory";
+const std::wstring DEFAULT_INVENTORY_ID = L"55d7217a4bdc2d86028b456d";
 
 namespace Hacks {
     const char* snapLineModes[4]{ "Off", "Center", "Bottom", "Top" };
@@ -60,6 +60,44 @@ namespace Hacks {
                 if (motion) {
                     Memory::Write<float>(Global::pMemoryInterface, motion + 0xD0,
                         Global::pSettings->noRecoil.motionIntensity);
+                }
+            }
+        }
+    }
+
+    void DoKeybindActions() {
+        if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.toggleLootESPEnabled) & 1) {
+            Global::pSettings->lootESP.enabled = !Global::pSettings->lootESP.enabled;
+        }
+
+        if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.lootItemFilterWhitelistMode) & 1) {
+            Global::pSettings->lootESP.whitelist = !Global::pSettings->lootESP.whitelist;
+        }
+        
+        if (Global::gameWorld.address && Global::activeCamera.address) {
+            if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.addLootItemToFilters) & 1) {
+                std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
+                WorldLootItem* targetItem = nullptr;
+                float targetDistance = FLT_MAX;
+                for (WorldLootItem& item : loot) {
+                    Vector3 screenPosition = Global::activeCamera.WorldToScreen(item.GetPosition());
+                    if (screenPosition.z < 0.01f) {
+                        continue;
+                    }
+
+                    float distance = Vector2Distance(Global::centerScreen, *(Vector2*)&screenPosition);
+                    if (distance < targetDistance) {
+                        targetDistance = distance;
+                        targetItem = &item;
+                    }
+                }
+
+                if (targetItem) {
+                    std::wstring name = targetItem->GetLocalizedName(nullptr);
+                    if (IS_VALID_WSTRING(name) && std::find(Global::pSettings->lootESP.filters.begin(), Global::pSettings->lootESP.filters.end(), name) == Global::pSettings->lootESP.filters.end()) {
+                        Global::pSettings->lootESP.filters.push_back(targetItem->GetLocalizedName(nullptr));
+                        Global::pSettings->Serialize();
+                    }
                 }
             }
         }
@@ -124,6 +162,8 @@ namespace Hacks {
                 ImGui::Indent();
                 ImGui::PushID("ESP_Loot");
                 ImGui::Checkbox("Enabled", &Global::pSettings->lootESP.enabled);
+                ImGui::Checkbox("Use Filter", &Global::pSettings->lootESP.useFilter);
+                ImGui::Checkbox("Whitelist", &Global::pSettings->lootESP.whitelist);
                 ImGui::DragFloat("Distance", &Global::pSettings->lootESP.distance);
                 ImGui::InputText("Filter", lootESPFilterInputBuffer, 255);
                 bool shouldClear = false;
@@ -166,14 +206,14 @@ namespace Hacks {
 
     void DrawPlayerESP() {
         std::vector<Player>& players = Global::gameWorld.GetPlayers();
-        int playerCount = players.size();
+        size_t playerCount = players.size();
         if (playerCount < 2) {
             return;
         }
 
         Vector3 localPlayerPosition = players[0].GetPosition();
         ProfileInfo& localPlayerInfo = players[0].GetProfileInfo();
-        for (int i = 1; i < playerCount; i++) {
+        for (size_t i = 1; i < playerCount; i++) {
             Player& player = players[i];
             ProfileInfo info = player.GetProfileInfo();
             Vector3 playerPosition = player.GetPosition();
@@ -220,7 +260,7 @@ namespace Hacks {
                     stream << L"\n";
                 }
 
-                stream << player.GetActiveWeapon().GetTemplate().GetLocalizedName().c_str() << L" ";
+                stream << player.GetFirearmController().GetItem().GetTemplate().GetLocalizedName().c_str() << L" ";
             }
 
             float test = distance / Global::pSettings->skeletonESP.distance;
@@ -241,7 +281,7 @@ namespace Hacks {
                 Global::pSettings->snapLines.activeMode > 0 &&
                 ((info.IsPlayer() && Global::pSettings->snapLines.types[0]) ||
                     (info.IsBoss() && Global::pSettings->snapLines.types[1]) ||
-                    (!info.IsBoss() && Global::pSettings->snapLines.types[2]));
+                    (!info.IsPlayer() && !info.IsBoss() && Global::pSettings->snapLines.types[2]));
             if (drawSnapline) {
                 if (!(Global::pSettings->skeletonESP.distance < distance) && !isInImportantRange) {
                     DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition,
@@ -259,7 +299,7 @@ namespace Hacks {
 
             bool drawBoxESP = (info.IsPlayer() && Global::pSettings->boxESP.types[0]) ||
                 (info.IsBoss() && Global::pSettings->boxESP.types[1]) || 
-                (!info.IsBoss() && Global::pSettings->boxESP.types[2]);
+                (!info.IsPlayer() && !info.IsBoss() && Global::pSettings->boxESP.types[2]);
             if (drawBoxESP) {
                 Vector3 headPosition = Vector3Add(player.GetBone(EBone::Head), Vector3{ 0.f, 0.25f, 0.f});
                 Vector3 headScreenPositionV3 = Global::activeCamera.WorldToScreen(headPosition);
@@ -278,7 +318,7 @@ namespace Hacks {
         }
 
         std::vector<Player>& players = Global::gameWorld.GetPlayers();
-        int playerCount = players.size();
+        size_t playerCount = players.size();
         if (playerCount <= 1) {
             return;
         }
@@ -286,12 +326,12 @@ namespace Hacks {
         std::vector<Player*> sortedPlayers{};
         Vector3 localPlayerPosition = players[0].GetPosition();
         ProfileInfo& localPlayerInfo = players[0].GetProfileInfo();
-        for (int i = 1; i < playerCount; i++) {
+        for (size_t i = 1; i < playerCount; i++) {
             ProfileInfo& info = players[i].GetProfileInfo();
             bool shouldDraw =
                 ((info.IsPlayer() && Global::pSettings->skeletonESP.types[0]) ||
                     (info.IsBoss() && Global::pSettings->skeletonESP.types[1]) ||
-                    (!info.IsBoss() && Global::pSettings->skeletonESP.types[2]));
+                    (!info.IsPlayer() && !info.IsBoss() && Global::pSettings->skeletonESP.types[2]));
             if (!shouldDraw) {
                 continue;
             }
@@ -334,7 +374,7 @@ namespace Hacks {
     }
 
     void DrawLootESP() {
-        if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0) {
+        if (!Global::pSettings->lootESP.enabled || Global::gameWorld.GetPlayers().size() <= 0 || Global::gameWorld.GetPlayers()[0].GetFirearmController().IsAiming()) {
             return;
         }
 
@@ -349,10 +389,13 @@ namespace Hacks {
             }
 
             float distance = Vector3Distance(localPlayerPosition, loot[i].GetPosition());
-            std::wstring itemName = loot[i].GetLocalizedName(nullptr);
-            if (itemName == DEFAULT_INVENTORY) {
+            std::wstring itemName = NULL_WSTRING;
+            if (loot[i].GetId() == DEFAULT_INVENTORY_ID) {
                 itemName = L"DEAD";
                 color = GRAY;
+            }
+            else {
+                itemName = loot[i].GetLocalizedName(nullptr);
             }
 
             DrawText(std::format("{} [{:0.0f}m]", std::string{itemName.begin(), itemName.end()}, distance).c_str(),

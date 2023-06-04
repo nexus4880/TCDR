@@ -19,6 +19,7 @@
 #include "Utils.h"
 #include <locale>
 #include <codecvt>
+#include "mdissect/mdissect.hpp"
 
 namespace nlohmann {
 	template <>
@@ -64,18 +65,22 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 		nlohmann::json json_data{};
 		fs >> json_data;
 		for (auto& element : json_data.items()) {
-			if (element.value().is_string()) {
-				if (element.value().is_string()) {
-					std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-					std::wstring key = conv.from_bytes(element.key());
-					Global::itemTemplates[key] = element.value().get<std::wstring>();
-				}
-			}
+			std::string keyStr = element.key();
+			std::wstring key{keyStr.begin(), keyStr.end()};
+			Global::itemTemplates[key] = element.value().get<std::wstring>();
 		}
 	}
 	else {
 		printf_s("Missing items.json?\n");
 	}
+
+	mdissect::read_memory = [](uint64_t address, void* buffer, size_t size) -> bool {
+		return Global::pMemoryInterface->ReadRaw(address, buffer, size);
+	};
+
+	mdissect::write_memory = [](uint64_t address, const void* buffer, size_t size) -> bool {
+		return Global::pMemoryInterface->WriteRaw(address, buffer, size);
+	};
 }
 
 TestOverlay::~TestOverlay() {
@@ -93,6 +98,7 @@ void TestOverlay::OnFocusLost() {
 void TestOverlay::UpdateImGui() {
 	Global::totalTime += GetFrameTime();
 	Global::centerScreen = Vector2{GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
+	Hacks::DoKeybindActions();
 	if (Global::pMemoryInterface->UpdateProcessId(L"EscapeFromTarkov.exe")) {
 		if (Global::gom.address) {
 			if (Global::totalTime >= Global::lastUpdated + Global::pSettings->updateRate) {

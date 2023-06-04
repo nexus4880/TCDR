@@ -80,6 +80,7 @@
     <ClCompile Include="BasicMemoryInterface.cpp" />
     <ClCompile Include="DriverInterop.cpp" />
     <ClCompile Include="EFTCamera.cpp" />
+    <ClCompile Include="FirearmController.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="Global.cpp" />
@@ -88,6 +89,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemTemplate.cpp" />
     <ClCompile Include="ListNode.cpp" />
+    <ClCompile Include="mdissect\mdissect.cpp" />
     <ClCompile Include="Offsets.cpp" />
     <ClCompile Include="Overlay.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -110,6 +112,7 @@
     <ClInclude Include="DriverInterop.h" />
     <ClInclude Include="EFTCamera.hpp" />
     <ClInclude Include="EquipmentSlot.hpp" />
+    <ClInclude Include="FirearmController.hpp" />
     <ClInclude Include="GameObjectManager.hpp" />
     <ClInclude Include="GameWorld.hpp" />
     <ClInclude Include="Global.hpp" />
@@ -118,6 +121,8 @@
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="ItemTemplate.hpp" />
     <ClInclude Include="ListNode.hpp" />
+    <ClInclude Include="mdissect\mdissect.hpp" />
+    <ClInclude Include="mdissect\offsets.hpp" />
     <ClInclude Include="Offsets.hpp" />
     <ClInclude Include="Overlay.h" />
     <ClInclude Include="Player.hpp" />

@@ -74,7 +74,7 @@ bool BasicMemoryInterface::ReadRaw(uint64_t address, void* pBuffer, unsigned lon
     return ReadProcessMemory(this->handle, (LPCVOID)address, pBuffer, size, nullptr);
 }
 
-bool BasicMemoryInterface::WriteRaw(uint64_t address, void* pBuffer, unsigned long size) {
+bool BasicMemoryInterface::WriteRaw(uint64_t address, const void* pBuffer, unsigned long size) {
     if (!this->pid || !this->handle || address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }

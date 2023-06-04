@@ -41,7 +41,7 @@ bool DriverInterop::ReadRaw(uint64_t address, void* data, unsigned long size) {
     return DeviceIoControl(this->handle, IO_READ_REQUEST, &request, sizeof(IOReadRequest), &request, sizeof(IOReadRequest), nullptr, nullptr);
 }
 
-bool DriverInterop::WriteRaw(uint64_t address, void* data, unsigned long size) {
+bool DriverInterop::WriteRaw(uint64_t address, const void* data, unsigned long size) {
     if (address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
