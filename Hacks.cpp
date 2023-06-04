@@ -74,28 +74,30 @@ namespace Hacks {
             Global::pSettings->lootESP.whitelist = !Global::pSettings->lootESP.whitelist;
         }
         
-        if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.addLootItemToFilters) & 1) {
-            std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
-            WorldLootItem* targetItem = nullptr;
-            float targetDistance = FLT_MAX;
-            for (WorldLootItem& item : loot) {
-                Vector3 screenPosition = Global::activeCamera.WorldToScreen(item.GetPosition());
-                if (screenPosition.z < 0.01f) {
-                    continue;
+        if (Global::gameWorld.address && Global::activeCamera.address) {
+            if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.addLootItemToFilters) & 1) {
+                std::vector<WorldLootItem>& loot = Global::gameWorld.GetLoot();
+                WorldLootItem* targetItem = nullptr;
+                float targetDistance = FLT_MAX;
+                for (WorldLootItem& item : loot) {
+                    Vector3 screenPosition = Global::activeCamera.WorldToScreen(item.GetPosition());
+                    if (screenPosition.z < 0.01f) {
+                        continue;
+                    }
+
+                    float distance = Vector2Distance(Global::centerScreen, *(Vector2*)&screenPosition);
+                    if (distance < targetDistance) {
+                        targetDistance = distance;
+                        targetItem = &item;
+                    }
                 }
 
-                float distance = Vector2Distance(Global::centerScreen, *(Vector2*)&screenPosition);
-                if (distance < targetDistance) {
-                    targetDistance = distance;
-                    targetItem = &item;
-                }
-            }
-
-            if (targetItem) {
-                std::wstring name = targetItem->GetLocalizedName(nullptr);
-                if (IS_VALID_WSTRING(name) && std::find(Global::pSettings->lootESP.filters.begin(), Global::pSettings->lootESP.filters.end(), name) == Global::pSettings->lootESP.filters.end()) {
-                    Global::pSettings->lootESP.filters.push_back(targetItem->GetLocalizedName(nullptr));
-                    Global::pSettings->Serialize();
+                if (targetItem) {
+                    std::wstring name = targetItem->GetLocalizedName(nullptr);
+                    if (IS_VALID_WSTRING(name) && std::find(Global::pSettings->lootESP.filters.begin(), Global::pSettings->lootESP.filters.end(), name) == Global::pSettings->lootESP.filters.end()) {
+                        Global::pSettings->lootESP.filters.push_back(targetItem->GetLocalizedName(nullptr));
+                        Global::pSettings->Serialize();
+                    }
                 }
             }
         }

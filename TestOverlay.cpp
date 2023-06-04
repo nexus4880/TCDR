@@ -98,6 +98,7 @@ void TestOverlay::OnFocusLost() {
 void TestOverlay::UpdateImGui() {
 	Global::totalTime += GetFrameTime();
 	Global::centerScreen = Vector2{GetRenderWidth() * 0.5f, GetRenderHeight() * 0.5f};
+	Hacks::DoKeybindActions();
 	if (Global::pMemoryInterface->UpdateProcessId(L"EscapeFromTarkov.exe")) {
 		if (Global::gom.address) {
 			if (Global::totalTime >= Global::lastUpdated + Global::pSettings->updateRate) {
@@ -110,7 +111,6 @@ void TestOverlay::UpdateImGui() {
 			}
 
 			if (Global::gameWorld.address && Global::activeCamera.address) {
-				Hacks::DoKeybindActions();
 				Hacks::DoNoRecoil();
 			}
 		}
