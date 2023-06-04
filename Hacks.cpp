@@ -275,7 +275,7 @@ namespace Hacks {
                 Global::pSettings->snapLines.activeMode > 0 &&
                 ((info.IsPlayer() && Global::pSettings->snapLines.types[0]) ||
                     (info.IsBoss() && Global::pSettings->snapLines.types[1]) ||
-                    (!info.IsBoss() && Global::pSettings->snapLines.types[2]));
+                    (!info.IsPlayer() && !info.IsBoss() && Global::pSettings->snapLines.types[2]));
             if (drawSnapline) {
                 if (!(Global::pSettings->skeletonESP.distance < distance) && !isInImportantRange) {
                     DrawLineV(GetSnaplineBase(), *(Vector2*)&screenPosition,
@@ -293,7 +293,7 @@ namespace Hacks {
 
             bool drawBoxESP = (info.IsPlayer() && Global::pSettings->boxESP.types[0]) ||
                 (info.IsBoss() && Global::pSettings->boxESP.types[1]) || 
-                (!info.IsBoss() && Global::pSettings->boxESP.types[2]);
+                (!info.IsPlayer() && !info.IsBoss() && Global::pSettings->boxESP.types[2]);
             if (drawBoxESP) {
                 Vector3 headPosition = Vector3Add(player.GetBone(EBone::Head), Vector3{ 0.f, 0.25f, 0.f});
                 Vector3 headScreenPositionV3 = Global::activeCamera.WorldToScreen(headPosition);
@@ -325,7 +325,7 @@ namespace Hacks {
             bool shouldDraw =
                 ((info.IsPlayer() && Global::pSettings->skeletonESP.types[0]) ||
                     (info.IsBoss() && Global::pSettings->skeletonESP.types[1]) ||
-                    (!info.IsBoss() && Global::pSettings->skeletonESP.types[2]));
+                    (!info.IsPlayer() && !info.IsBoss() && Global::pSettings->skeletonESP.types[2]));
             if (!shouldDraw) {
                 continue;
             }
