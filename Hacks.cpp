@@ -66,6 +66,10 @@ namespace Hacks {
     }
 
     void DoKeybindActions() {
+        if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.toggleLootESPEnabled) & 1) {
+            Global::pSettings->lootESP.enabled = !Global::pSettings->lootESP.enabled;
+        }
+
         if (WinWrapper::WGetAsyncKeyState(Global::pSettings->keybinds.lootItemFilterWhitelistMode) & 1) {
             Global::pSettings->lootESP.whitelist = !Global::pSettings->lootESP.whitelist;
         }

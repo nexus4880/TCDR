@@ -44,8 +44,9 @@ struct Settings {
 	};
 
 	struct Keybinds {
-		int lootItemFilterWhitelistMode = 334; // KP_ADD
-		int addLootItemToFilters = 76; // L
+		int toggleLootESPEnabled = 0x07;
+		int lootItemFilterWhitelistMode = 0x07;
+		int addLootItemToFilters = 0x07;
 	};
 
 	struct Debug {

@@ -104,6 +104,7 @@ Settings Settings::FromFile(std::filesystem::path file, bool* hasErrorOccurred) 
         settings.lootESP.filters.push_back(std::wstring{filter.begin(), filter.end()});
     }
 
+    settings.keybinds.toggleLootESPEnabled = TRY_READ(int, json, ["keybinds"]["toggleLootESPEnabled"]);
     settings.keybinds.lootItemFilterWhitelistMode = TRY_READ(int, json, ["keybinds"]["lootItemFilterWhitelistMode"]);
     settings.keybinds.addLootItemToFilters = TRY_READ(int, json, ["keybinds"]["addLootItemToFilters"]);
 
@@ -156,6 +157,7 @@ void Settings::Serialize() {
 
     SET_LIST_VALUE(jsonSettings, lootESPFilters, ["lootESP"]["filters"]);
 
+    SET_JSON_VALUE(jsonSettings, ["keybinds"]["toggleLootESPEnabled"], this->keybinds.toggleLootESPEnabled);
     SET_JSON_VALUE(jsonSettings, ["keybinds"]["lootItemFilterWhitelistMode"], this->keybinds.lootItemFilterWhitelistMode);
     SET_JSON_VALUE(jsonSettings, ["keybinds"]["addLootItemToFilters"], this->keybinds.addLootItemToFilters);
 
