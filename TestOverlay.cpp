@@ -111,6 +111,7 @@ void TestOverlay::UpdateImGui() {
 			}
 
 			if (Global::gameWorld.address && Global::activeCamera.address) {
+				Global::activeCamera.cachedMatrix = std::nullopt;
 				Hacks::DoNoRecoil();
 			}
 		}
