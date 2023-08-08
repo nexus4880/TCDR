@@ -23,7 +23,7 @@ unsigned long WinMain()
 	BasicMemoryInterface basicMemoryInterface{};
 	Global::pMemoryInterface = &basicMemoryInterface;
 #endif
-	TestOverlay overlay{"TestOverlay", 60};
+	TestOverlay overlay{"TestOverlay", -1};
 	while (overlay.IsRunning()) {
 		overlay.Update();
 		overlay.Draw();
