@@ -2,14 +2,15 @@
 #include "IMemoryInterface.h"
 #include "Global.hpp"
 #include "Utils.h"
-#include <raymath.h>
+#include "Matrix.hpp"
+#include "Vector3.hpp"
 
 Matrix EFTCamera::GetMatrix() const {
 	return Memory::ReadChain<Matrix>(Global::pMemoryInterface, this->address, {0x30, 0x18, 0x0DC});
 }
 
 Vector3 EFTCamera::WorldToScreen(Vector3 point) const {
-	Matrix matrix = this->GetMatrix();
+	/*Matrix matrix = this->GetMatrix();
 	Utils::TransposeMatrix((float*)&matrix);
 
 	Vector3 translationVector = Vector3{matrix.m3, matrix.m7, matrix.m11};
@@ -25,5 +26,6 @@ Vector3 EFTCamera::WorldToScreen(Vector3 point) const {
 		result.y = (GetMonitorHeight(0) / 2.f) * (1.f - y / result.z);
 	}
 
-	return result;
+	return result;*/
+	return {};
 }

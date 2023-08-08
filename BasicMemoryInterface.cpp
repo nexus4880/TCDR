@@ -59,7 +59,7 @@ uint64_t BasicMemoryInterface::GetBaseAddress() {
 }
 
 uint64_t BasicMemoryInterface::GetModuleBase() {
-    return 0x7FFD7EA50000;
+    return 0x7FFF9ECC0000;
 }
 
 bool BasicMemoryInterface::SetTargetModule(wchar_t* moduleName) {

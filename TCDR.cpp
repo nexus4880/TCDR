@@ -6,7 +6,7 @@
 #include "Global.hpp"
 #include <numeric>
 
-#define USE_DRIVER 1
+#define USE_DRIVER 0
 
 #ifdef _DEBUG
 int main()
@@ -23,9 +23,28 @@ unsigned long WinMain()
 	BasicMemoryInterface basicMemoryInterface{};
 	Global::pMemoryInterface = &basicMemoryInterface;
 #endif
-	TestOverlay overlay{"TestOverlay", 60};
-	while (overlay.IsRunning()) {
-		overlay.Update();
-		overlay.Draw();
+
+	if (!Global::pMemoryInterface->UpdateProcessId(L"EscapeFromTarkov.exe")) {
+		throw;
 	}
+
+	Global::gom = GameObjectManager::Get();
+	if (!Global::gom.address) {
+		throw;
+	}
+
+	std::cout << "Press enter while in a game" << std::endl;
+	std::cin.get();
+	GameWorld gameWorld = GameWorld::Get();
+	if (!gameWorld.address) {
+		throw;
+	}
+
+	std::vector<Player>& players = gameWorld.GetPlayers();
+	for (Player& player : players) {
+		printf_s("%llx: %ws\n", player.address, player.GetProfileInfo().GetNickname().c_str());
+	}
+
+	std::cout << "EOF" << std::endl;
+	std::cin.get();
 }

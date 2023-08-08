@@ -27,7 +27,6 @@ namespace Offsets {
 
 	namespace InventoryController {
 		extern uint64_t InventoryClass;
-		extern uint64_t IsInInventory;
 	}
 
 	namespace InventoryClass {

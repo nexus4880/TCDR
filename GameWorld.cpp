@@ -2,7 +2,6 @@
 #include "Offsets.hpp"
 #include "Global.hpp"
 #include "Utils.h"
-#include <raymath.h>
 #include "mdissect/mdissect.hpp"
 
 GameWorld GameWorld::Get() {
@@ -41,9 +40,9 @@ std::vector<Player>& GameWorld::GetPlayers() {
 }
 
 std::vector<WorldLootItem>& GameWorld::GetLoot() {
-	size_t filtersCount = Global::pSettings->lootESP.filters.size();
+	/*size_t filtersCount = Global::pSettings->lootESP.filters.size();
 	if (!this->cachedLoot.has_value()) {
-		std::vector<uint64_t> addresses = Memory::ReadList<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x80));
+		std::vector<uint64_t> addresses = Memory::ReadList<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x98));
 		size_t length = addresses.size();
 		std::vector<WorldLootItem> loot{};
 		loot.reserve(length);
@@ -89,5 +88,8 @@ std::vector<WorldLootItem>& GameWorld::GetLoot() {
 		this->cachedLoot = loot;
 	}
 	
-	return this->cachedLoot.value();
+	return this->cachedLoot.value();*/
+	std::vector<WorldLootItem> p{};
+
+	return p;
 }

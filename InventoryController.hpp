@@ -11,7 +11,6 @@ public:
 		this->address = address;
 	}
 
-	bool IsInInventory();
 	Slot GetSlot(EquipmentSlot slot);
 
 	uint64_t address;
