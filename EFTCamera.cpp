@@ -4,11 +4,15 @@
 #include "Utils.h"
 #include <raymath.h>
 
-Matrix EFTCamera::GetMatrix() const {
-	return Memory::ReadChain<Matrix>(Global::pMemoryInterface, this->address, {0x30, 0x18, 0x0DC});
+Matrix EFTCamera::GetMatrix() {
+	if (!this->cachedMatrix.has_value()) {
+		this->cachedMatrix = Memory::ReadChain<Matrix>(Global::pMemoryInterface, this->address, { 0x30, 0x18, 0x0DC });;
+	}
+
+	return this->cachedMatrix.value();
 }
 
-Vector3 EFTCamera::WorldToScreen(Vector3 point) const {
+Vector3 EFTCamera::WorldToScreen(Vector3 point) {
 	Matrix matrix = this->GetMatrix();
 	Utils::TransposeMatrix((float*)&matrix);
 

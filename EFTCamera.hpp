@@ -3,6 +3,7 @@
 #include <numbers>
 #include <raylib.h>
 #include <unordered_map>
+#include <optional>
 
 class EFTCamera {
 public:
@@ -13,8 +14,9 @@ public:
 		this->address = address;
 	}
 
-	Matrix GetMatrix() const;
-	Vector3 WorldToScreen(Vector3 point) const;
+	Matrix GetMatrix();
+	Vector3 WorldToScreen(Vector3 point);
 
 	uint64_t address;
+	std::optional<Matrix> cachedMatrix = std::nullopt;
 };
