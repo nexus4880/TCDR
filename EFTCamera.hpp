@@ -1,9 +1,8 @@
 #pragma once
 
 #include <numbers>
+#include <raylib.h>
 #include <unordered_map>
-#include "Matrix.hpp"
-#include "Vector3.hpp"
 
 class EFTCamera {
 public:

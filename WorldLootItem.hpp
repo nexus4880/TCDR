@@ -2,8 +2,8 @@
 
 #include <numbers>
 #include <optional>
+#include <raylib.h>
 #include <string>
-#include "Vector3.hpp"
 
 const std::wstring UNLOCALIZED_ITEM = L"unlocalized_item";
 

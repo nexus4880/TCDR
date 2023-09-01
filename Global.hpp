@@ -11,7 +11,6 @@
 #include <map>
 #include <memory>
 #endif
-#include "Vector2.hpp"
 
 namespace Global {
 #if !PRIMITIVES_ONLY

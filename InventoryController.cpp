@@ -3,6 +3,10 @@
 #include "Global.hpp"
 #include "Offsets.hpp"
 
+bool InventoryController::IsInInventory() {
+	return Memory::ReadValue<bool>(Global::pMemoryInterface, this->address + Offsets::InventoryController::IsInInventory) == false;
+}
+
 Slot InventoryController::GetSlot(EquipmentSlot slot) {
 	if (!this->cachedSlots[slot].has_value()) {
 		this->cachedSlots[slot] = Slot{

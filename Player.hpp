@@ -3,12 +3,12 @@
 #include <numbers>
 #include "ProfileInfo.hpp"
 #include "InventoryController.hpp"
+#include <raylib.h>
 #include <array>
 #include "Bones.hpp"
 #include <map>
 #include <optional>
 #include "FirearmController.hpp"
-#include "Vector3.hpp"
 
 const int BONE_PATH_SIZE = 21;
 
@@ -21,7 +21,7 @@ public:
 	Vector3 GetPosition();
 	Vector3 GetBone(EBone bone);
 	void DrawBones(float alpha, ProfileInfo& localPlayerInfo);
-	//Color GetColor(ProfileInfo inRelationTo);
+	Color GetColor(ProfileInfo inRelationTo);
 	InventoryController GetInventoryController();
 	FirearmController GetFirearmController();
 
@@ -36,7 +36,7 @@ private:
 	uint64_t cachedEFTPlayerClassAddress;
 	uint64_t cachedTransformAddress;
 	std::optional<InventoryController> cachedInventoryController = std::nullopt;
-	//std::optional<Color> cachedColor = std::nullopt;
+	std::optional<Color> cachedColor = std::nullopt;
 
 	inline static const std::array<std::array<EBone, 2>, BONE_PATH_SIZE> drawPaths
 	{

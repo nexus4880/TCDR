@@ -9,7 +9,7 @@ namespace Offsets {
 	}
 
 	namespace GameWorld {
-		uint64_t RegisteredPlayers = 0xC0;
+		uint64_t RegisteredPlayers = 0xA0;
 	}
 
 	namespace List {
@@ -19,11 +19,12 @@ namespace Offsets {
 	}
 
 	namespace Player {
-		uint64_t InventoryController = 0x570;
+		uint64_t InventoryController = 0x568;
 	}
 
 	namespace InventoryController {
 		uint64_t InventoryClass = 0x130;
+		uint64_t IsInInventory = 0x178;
 	}
 
 	namespace InventoryClass {

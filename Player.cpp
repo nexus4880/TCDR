@@ -65,6 +65,68 @@ Vector3 Player::GetBone(EBone bone) {
 }
 
 void Player::DrawBones(float alpha, ProfileInfo& localPlayerInfo) {
+	std::map<EBone, Vector3> boneWorldToScreens{};
+	for (int i = 0; i < BONE_PATH_SIZE; i++) {
+		std::array<EBone, 2> path = Player::drawPaths[i];
+		Vector3 first;
+		if (!boneWorldToScreens.contains(path[0])) {
+			first = Global::activeCamera.WorldToScreen(this->GetBone(path[0]));
+			boneWorldToScreens[path[0]] = first;
+		}
+		else {
+			first = boneWorldToScreens[path[0]];
+		}
+
+		if (first.x == 0.f || first.y == 0.f || first.z <= 0.01f) {
+			continue;
+		}
+
+		Vector3 second;
+		if (!boneWorldToScreens.contains(path[1])) {
+			second = Global::activeCamera.WorldToScreen(this->GetBone(path[1]));
+			boneWorldToScreens[path[1]] = second;
+		}
+		else {
+			second = boneWorldToScreens[path[1]];
+		}
+
+		if (second.x == 0.f || second.y == 0.f || second.z <= 0.01f) {
+			continue;
+		}
+		DrawLine(static_cast<int>(first.x), static_cast<int>(first.y), static_cast<int>(second.x), static_cast<int>(second.y), ColorAlpha(this->GetColor(localPlayerInfo), alpha));
+	}
+}
+
+Color Player::GetColor(ProfileInfo inRelationTo) {
+	if (!this->cachedColor.has_value()) {
+		ProfileInfo info = this->GetProfileInfo();
+		const std::wstring playerGroupId = info.GetGroupID();
+		const std::wstring relativeId = inRelationTo.GetGroupID();
+		if (!IS_VALID_WSTRING(playerGroupId) || !IS_VALID_WSTRING(relativeId) || relativeId != playerGroupId) {
+			switch (info.GetSide()) {
+			case 1:
+			{
+				this->cachedColor = YELLOW;
+				break;
+			}
+			case 2:
+			{
+				this->cachedColor = RED;
+				break;
+			}
+			case 4:
+			{
+				this->cachedColor = info.IsPlayer() ? DARKBLUE : SKYBLUE;
+				break;
+			}
+			}
+		}
+		else {
+			this->cachedColor = GREEN;
+		}
+	}
+
+	return cachedColor.value();
 }
 
 InventoryController Player::GetInventoryController() {

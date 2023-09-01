@@ -51,9 +51,6 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -99,6 +96,7 @@
     <ClCompile Include="Hacks.cpp" />
     <ClCompile Include="ProfileInfo.cpp" />
     <ClCompile Include="ProfileSettings.cpp" />
+    <ClCompile Include="rlImGui.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Slot.cpp" />
     <ClCompile Include="TCDR.cpp" />
@@ -123,7 +121,6 @@
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="ItemTemplate.hpp" />
     <ClInclude Include="ListNode.hpp" />
-    <ClInclude Include="Matrix.hpp" />
     <ClInclude Include="mdissect\mdissect.hpp" />
     <ClInclude Include="mdissect\offsets.hpp" />
     <ClInclude Include="Offsets.hpp" />
@@ -132,13 +129,11 @@
     <ClInclude Include="Hacks.hpp" />
     <ClInclude Include="ProfileInfo.hpp" />
     <ClInclude Include="ProfileSettings.hpp" />
+    <ClInclude Include="rlImGui.h" />
     <ClInclude Include="Settings.hpp" />
     <ClInclude Include="Slot.hpp" />
     <ClInclude Include="TestOverlay.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Vector2.hpp" />
-    <ClInclude Include="Vector3.hpp" />
-    <ClInclude Include="Vector4.hpp" />
     <ClInclude Include="WinWrapper.h" />
     <ClInclude Include="WorldLootItem.hpp" />
   </ItemGroup>
