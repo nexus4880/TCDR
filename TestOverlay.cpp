@@ -77,7 +77,7 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 	};
 
 	mdissect::write_memory = [](uint64_t address, const void* buffer, size_t size) -> bool {
-		return Global::pMemoryInterface->WriteRaw(address, buffer, size);
+		return Global::pMemoryInterface->WriteRaw(address, const_cast<void*>(buffer), size);
 	};
 }
 

@@ -43,6 +43,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>./lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>./lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
@@ -55,6 +61,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vmm.lib;leechcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -74,10 +81,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>vmm.lib;leechcore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasicMemoryInterface.cpp" />
+    <ClCompile Include="DMAInterop.cpp" />
     <ClCompile Include="DriverInterop.cpp" />
     <ClCompile Include="EFTCamera.cpp" />
     <ClCompile Include="FirearmController.cpp" />
@@ -109,6 +118,7 @@
     <ClInclude Include="BaseObject.hpp" />
     <ClInclude Include="BasicMemoryInterface.h" />
     <ClInclude Include="Bones.hpp" />
+    <ClInclude Include="DMAInterop.hpp" />
     <ClInclude Include="DriverInterop.h" />
     <ClInclude Include="EFTCamera.hpp" />
     <ClInclude Include="EquipmentSlot.hpp" />
@@ -120,6 +130,7 @@
     <ClInclude Include="InventoryController.hpp" />
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="ItemTemplate.hpp" />
+    <ClInclude Include="leechcore.h" />
     <ClInclude Include="ListNode.hpp" />
     <ClInclude Include="mdissect\mdissect.hpp" />
     <ClInclude Include="mdissect\offsets.hpp" />
@@ -134,6 +145,7 @@
     <ClInclude Include="Slot.hpp" />
     <ClInclude Include="TestOverlay.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="vmmdll.h" />
     <ClInclude Include="WinWrapper.h" />
     <ClInclude Include="WorldLootItem.hpp" />
   </ItemGroup>

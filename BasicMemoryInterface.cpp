@@ -30,40 +30,8 @@ bool BasicMemoryInterface::UpdateProcessId(const wchar_t* processName) {
     return this->pid && this->handle;
 }
 
-uint64_t BasicMemoryInterface::GetBaseAddress() {
-    if (!this->pid || !this->handle) {
-        return false;
-    }
-
-    DWORD_PTR baseAddress = 0;
-    HMODULE* moduleArray = nullptr;
-    LPBYTE moduleArrayBytes = nullptr;
-    DWORD bytesRequired = 0;
-    if (EnumProcessModules(this->handle, NULL, 0, &bytesRequired)) {
-        if (bytesRequired) {
-            moduleArrayBytes = (LPBYTE)LocalAlloc(LPTR, bytesRequired);
-            if (moduleArrayBytes) {
-                unsigned int moduleCount = 0;
-                moduleCount = bytesRequired / sizeof(HMODULE);
-                moduleArray = (HMODULE*)moduleArrayBytes;
-                if (EnumProcessModules(this->handle, moduleArray, bytesRequired, &bytesRequired)) {
-                    baseAddress = (DWORD_PTR)moduleArray[0];
-                }
-
-                LocalFree(moduleArrayBytes);
-            }
-        }
-    }
-
-    return baseAddress;
-}
-
 uint64_t BasicMemoryInterface::GetModuleBase() {
     return 0x7FFD7EA50000;
-}
-
-bool BasicMemoryInterface::SetTargetModule(wchar_t* moduleName) {
-    throw("DRIVER USE ONLY!");
 }
 
 bool BasicMemoryInterface::ReadRaw(uint64_t address, void* pBuffer, unsigned long size) {
@@ -74,7 +42,7 @@ bool BasicMemoryInterface::ReadRaw(uint64_t address, void* pBuffer, unsigned lon
     return ReadProcessMemory(this->handle, (LPCVOID)address, pBuffer, size, nullptr);
 }
 
-bool BasicMemoryInterface::WriteRaw(uint64_t address, const void* pBuffer, unsigned long size) {
+bool BasicMemoryInterface::WriteRaw(uint64_t address, void* pBuffer, unsigned long size) {
     if (!this->pid || !this->handle || address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }

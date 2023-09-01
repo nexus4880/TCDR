@@ -1,13 +1,11 @@
 #pragma once
 
 #include "IMemoryInterface.h"
-#include <numeric>
 
-class DriverInterop : public IMemoryInterface {
+class DMAInterop : public IMemoryInterface {
 public:
-    DriverInterop();
-    DriverInterop(const DriverInterop& interop) = delete;
-    ~DriverInterop();
+    DMAInterop();
+    ~DMAInterop();
 
     bool UpdateProcessId(const wchar_t* processName);
     bool ReadRaw(uint64_t address, void* pBuffer, unsigned long size);
@@ -15,6 +13,6 @@ public:
     uint64_t GetModuleBase();
 
 private:
-    void* handle;
-    unsigned long pid;
+    void* m_pid;
+    void* m_handle;
 };

@@ -16,12 +16,10 @@ const std::wstring INVALID_LENGTH_WSTRING = L"_INVALID_LENGTH_";
 __interface IMemoryInterface
 {
 public:
-    uint64_t GetBaseAddress();
     bool UpdateProcessId(const wchar_t* processName);
     bool ReadRaw(uint64_t address, void* pBuffer, unsigned long size);
-    bool WriteRaw(uint64_t address, const void* pBuffer, unsigned long size);
+    bool WriteRaw(uint64_t address, void* pBuffer, unsigned long size);
     uint64_t GetModuleBase();
-    bool SetTargetModule(wchar_t* moduleName);
 };
 
 namespace Memory {
