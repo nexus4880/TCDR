@@ -2,7 +2,6 @@
 
 #include "TestOverlay.h"
 #include <imgui.h>
-#include <implot.h>
 #include "BaseObject.hpp"
 #include "GameWorld.hpp"
 #include "Offsets.hpp"
@@ -51,7 +50,6 @@ namespace nlohmann {
 TestOverlay::TestOverlay(const char* title, int updateRate) :
 	Overlay(title, updateRate)
 {
-	ImPlot::CreateContext();
 	bool hasError = false;
 	Global::pSettings = std::make_unique<Settings>(Settings::FromFile("config.json", &hasError));
 	if (hasError) {
@@ -81,10 +79,6 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 	mdissect::write_memory = [](uint64_t address, const void* buffer, size_t size) -> bool {
 		return Global::pMemoryInterface->WriteRaw(address, buffer, size);
 	};
-}
-
-TestOverlay::~TestOverlay() {
-	ImPlot::DestroyContext();
 }
 
 void TestOverlay::OnFocusFound() {

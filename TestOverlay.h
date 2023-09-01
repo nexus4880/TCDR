@@ -7,7 +7,6 @@ class TestOverlay : public Overlay
 public:
 	TestOverlay(const char* title, int updateRate);
 	TestOverlay(const TestOverlay& overlay) = delete;
-	~TestOverlay();
 	void UpdateImGui() override;
 	void DrawImGui() override;
 	bool ShouldShowMenu() override;
