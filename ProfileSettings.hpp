@@ -5,13 +5,13 @@
 
 class ProfileSettings {
 public:
-	ProfileSettings(uint64_t address) {
+	ProfileSettings(uintptr_t address) {
 		this->address = address;
 	}
 
 	int GetRole();
 
 private:
-	uint64_t address;
+	uintptr_t address;
 	std::optional<int> cachedRole = std::nullopt;
 };

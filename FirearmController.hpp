@@ -5,7 +5,7 @@
 
 class FirearmController {
 public:
-	FirearmController(uint64_t address)
+	FirearmController(uintptr_t address)
 		: address(address)
 	{
 	}
@@ -14,5 +14,5 @@ public:
 	bool IsAiming();
 
 private:
-	uint64_t address;
+	uintptr_t address;
 };

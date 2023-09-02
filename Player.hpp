@@ -14,10 +14,10 @@ const int BONE_PATH_SIZE = 21;
 
 class Player {
 public:
-	Player(uint64_t address);
+	Player(uintptr_t address);
 
 	ProfileInfo GetProfileInfo();
-	uint64_t GetSkeletonTransformListValues();
+	uintptr_t GetSkeletonTransformListValues();
 	Vector3 GetPosition();
 	Vector3 GetBone(EBone bone);
 	void DrawBones(float alpha, ProfileInfo& localPlayerInfo);
@@ -25,16 +25,16 @@ public:
 	InventoryController GetInventoryController();
 	FirearmController GetFirearmController();
 
-	uint64_t address;
+	uintptr_t address;
 	float distance;
 	float distance2d;
 	bool isInImportantRange;
 
 private:
-	std::map<EBone, uint64_t> cachedBones;
+	std::map<EBone, uintptr_t> cachedBones;
 	std::optional<ProfileInfo> cachedProfileInfo = std::nullopt;
-	uint64_t cachedEFTPlayerClassAddress;
-	uint64_t cachedTransformAddress;
+	uintptr_t cachedEFTPlayerClassAddress;
+	uintptr_t cachedTransformAddress;
 	std::optional<InventoryController> cachedInventoryController = std::nullopt;
 	std::optional<Color> cachedColor = std::nullopt;
 

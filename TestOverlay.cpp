@@ -56,7 +56,7 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 		std::cout << "An error occurred while loading the config" << std::endl;
 	}
 
-	SetExitKey(KeyboardKey::KEY_NULL);
+	SetExitKey(KeyboardKey::KEY_END);
 	if (std::filesystem::exists("items.json")) {
 		std::wifstream fs{"items.json"};
 		fs.imbue(std::locale(std::locale(), new std::codecvt_utf8<wchar_t>));
@@ -72,11 +72,11 @@ TestOverlay::TestOverlay(const char* title, int updateRate) :
 		printf_s("Missing items.json?\n");
 	}
 
-	mdissect::read_memory = [](uint64_t address, void* buffer, size_t size) -> bool {
+	mdissect::read_memory = [](uintptr_t address, void* buffer, size_t size) -> bool {
 		return Global::pMemoryInterface->ReadRaw(address, buffer, size);
 	};
 
-	mdissect::write_memory = [](uint64_t address, const void* buffer, size_t size) -> bool {
+	mdissect::write_memory = [](uintptr_t address, const void* buffer, size_t size) -> bool {
 		return Global::pMemoryInterface->WriteRaw(address, const_cast<void*>(buffer), size);
 	};
 }

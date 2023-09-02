@@ -13,7 +13,7 @@ bool Item::IsUnlimited() {
 ItemTemplate Item::GetTemplate() {
 	if (!this->cachedTemplate.has_value()) {
 		this->cachedTemplate = ItemTemplate{
-			Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x40)
+			Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x40)
 		};
 	}
 

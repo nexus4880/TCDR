@@ -5,7 +5,7 @@
 
 class GameObjectManager {
 public:
-	GameObjectManager(uint64_t address) {
+	GameObjectManager(uintptr_t address) {
 		this->address = address;
 	}
 
@@ -15,5 +15,5 @@ public:
 	ListNode GetTaggedObjects() const;
 	ListNode GetCameraList() const;
 
-	uint64_t address;
+	uintptr_t address;
 };

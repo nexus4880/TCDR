@@ -5,7 +5,7 @@ namespace Memory {
     const size_t readStringBufferSize = 255;
     wchar_t readStringBuffer[readStringBufferSize];
 
-    std::wstring ReadString(IMemoryInterface* pMemoryInterface, uint64_t address, bool sanitize) {
+    std::wstring ReadString(IMemoryInterface* pMemoryInterface, uintptr_t address, bool sanitize) {
         if (!address || address < MINIMUM_ADDRESS_SIZE) {
             return INVALID_ADDRESS_WSTRING;
         }

@@ -12,5 +12,5 @@ namespace Hacks {
 	void DrawSkeletonESP();
 	void DrawLootESP();
 
-	Vector3 ReadPosition(uint64_t transform);
+	Vector3 ReadPosition(uintptr_t transform);
 }

@@ -5,7 +5,7 @@
 
 Vector3 WorldLootItem::GetPosition() {
 	if (!this->cachedTransform.has_value()) {
-		this->cachedTransform = Memory::ReadChain<uint64_t>(Global::pMemoryInterface, this->address, { 0x10, 0x30, 0x30, 0x8, 0x28, 0x10 });
+		this->cachedTransform = Memory::ReadChain<uintptr_t>(Global::pMemoryInterface, this->address, { 0x10, 0x30, 0x30, 0x8, 0x28, 0x10 });
 	}
 
 	return Hacks::ReadPosition(this->cachedTransform.value());
@@ -13,7 +13,7 @@ Vector3 WorldLootItem::GetPosition() {
 
 std::wstring WorldLootItem::GetId() {
 	if (!this->cachedId.has_value()) {
-		this->cachedId = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x68));
+		this->cachedId = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x68));
 	}
 
 	return this->cachedId.value();

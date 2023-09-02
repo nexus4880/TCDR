@@ -3,7 +3,7 @@
 #include "Global.hpp"
 
 Item FirearmController::GetItem() {
-	return Item{ Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x60) };
+	return Item{ Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x60) };
 }
 
 bool FirearmController::IsAiming() {

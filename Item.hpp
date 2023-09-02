@@ -6,7 +6,7 @@
 
 class Item {
 public:
-	Item(uint64_t address)
+	Item(uintptr_t address)
 		: address(address)
 	{
 	}
@@ -16,6 +16,6 @@ public:
 	ItemTemplate GetTemplate();
 	
 private:
-	uint64_t address;
+	uintptr_t address;
 	std::optional<ItemTemplate> cachedTemplate = std::nullopt;
 };

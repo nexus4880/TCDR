@@ -3,7 +3,7 @@
 #include "Global.hpp"
 
 GameObjectManager GameObjectManager::Get() {
-	return GameObjectManager{Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Global::pMemoryInterface->GetModuleBase() + Offsets::GOM)};
+	return GameObjectManager{Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, Global::pMemoryInterface->GetModuleBase() + Offsets::GOM)};
 }
 
 ListNode GameObjectManager::GetActiveObjects() const {

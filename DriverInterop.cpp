@@ -1,3 +1,5 @@
+#ifdef MEMORY_INTERFACE_DRIVER
+
 #include "DriverInterop.h"
 #include <Windows.h>
 #include <string>
@@ -12,19 +14,19 @@
 
 struct IOReadRequest {
     unsigned long ProcessId;
-    uint64_t Address;
+    uintptr_t Address;
     SIZE_T Size;
     unsigned char* Value;
 };
 
 struct IOWriteRequest {
     unsigned long ProcessId;
-    uint64_t Address;
+    uintptr_t Address;
     SIZE_T Size;
     unsigned char* Value;
 };
 
-bool DriverInterop::ReadRaw(uint64_t address, void* data, unsigned long size) {
+bool DriverInterop::ReadRaw(uintptr_t address, void* data, unsigned long size) {
     if (address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
@@ -34,7 +36,7 @@ bool DriverInterop::ReadRaw(uint64_t address, void* data, unsigned long size) {
     return DeviceIoControl(this->handle, IO_READ_REQUEST, &request, sizeof(IOReadRequest), &request, sizeof(IOReadRequest), nullptr, nullptr);
 }
 
-bool DriverInterop::WriteRaw(uint64_t address, void* data, unsigned long size) {
+bool DriverInterop::WriteRaw(uintptr_t address, void* data, unsigned long size) {
     if (address < MINIMUM_ADDRESS_SIZE) {
         return false;
     }
@@ -54,13 +56,13 @@ bool DriverInterop::UpdateProcessId(const wchar_t* processName) {
     return this->pid != 0;
 }
 
-uint64_t DriverInterop::GetModuleBase() {
-    uint64_t request = 0;
+uintptr_t DriverInterop::GetModuleBase() {
+    uintptr_t request = 0;
 
     return DeviceIoControl(this->handle,
         IO_GET_MODULE_BASE_REQUEST,
-        &request, sizeof(uint64_t),
-        &request, sizeof(uint64_t),
+        &request, sizeof(uintptr_t),
+        &request, sizeof(uintptr_t),
         nullptr, nullptr
     ) ? request : 0;
 }
@@ -76,3 +78,5 @@ DriverInterop::DriverInterop() : pid(0) {
 DriverInterop::~DriverInterop() {
     CloseHandle(this->handle);
 }
+
+#endif

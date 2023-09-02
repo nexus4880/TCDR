@@ -9,7 +9,7 @@ const std::wstring UNLOCALIZED_ITEM = L"unlocalized_item";
 
 class WorldLootItem {
 public:
-	WorldLootItem(uint64_t address) {
+	WorldLootItem(uintptr_t address) {
 		this->address = address;
 	}
 
@@ -17,9 +17,9 @@ public:
 	std::wstring GetId();
 	std::wstring GetLocalizedName(bool* isLocalized);
 
-	uint64_t address;
+	uintptr_t address;
 private:
-	std::optional<uint64_t> cachedTransform;
+	std::optional<uintptr_t> cachedTransform;
 	std::optional<std::wstring> cachedId;
 	std::optional<std::wstring> cachedLocalizedName;
 };

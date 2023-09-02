@@ -41,22 +41,22 @@ namespace Hacks {
 
     void DoNoRecoil() {
         if (Global::pSettings->noRecoil.enabled && Global::gameWorld.GetPlayers().size() > 0) {
-            uint64_t pwa =
-                Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Global::gameWorld.GetPlayers()[0].address + 0x1A0);
+            uintptr_t pwa =
+                Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, Global::gameWorld.GetPlayers()[0].address + 0x1A0);
             if (pwa) {
-                uint64_t shootingg = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, pwa + 0x48);
+                uintptr_t shootingg = Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, pwa + 0x48);
                 if (shootingg) {
                     Memory::Write<float>(Global::pMemoryInterface, shootingg + 0x78,
                         Global::pSettings->noRecoil.shootinggIntensity);
                 }
 
-                uint64_t breath = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, pwa + 0x28);
+                uintptr_t breath = Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, pwa + 0x28);
                 if (breath) {
                     Memory::Write<float>(Global::pMemoryInterface, breath + 0xA4,
                         Global::pSettings->noRecoil.breathIntensity);
                 }
 
-                uint64_t motion = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, pwa + 0x38);
+                uintptr_t motion = Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, pwa + 0x38);
                 if (motion) {
                     Memory::Write<float>(Global::pMemoryInterface, motion + 0xD0,
                         Global::pSettings->noRecoil.motionIntensity);
@@ -404,14 +404,14 @@ namespace Hacks {
     }
 
     struct transform_access_read_only_t {
-        uint64_t transform_data{};
-        uint64_t data;
+        uintptr_t transform_data{};
+        uintptr_t data;
         int index;
     };
 
     struct transform_data_t {
-        uint64_t transform_array{};
-        uint64_t transform_indices{};
+        uintptr_t transform_array{};
+        uintptr_t transform_indices{};
     };
 
     struct matrix34_t {
@@ -420,7 +420,7 @@ namespace Hacks {
         Vector4 vec2{};
     };
 
-    Vector3 ReadPosition(uint64_t transform) {
+    Vector3 ReadPosition(uintptr_t transform) {
         __m128 result{};
 
         const __m128 mulVec0 = { -2.000, 2.000, -2.000, 0.000 };
@@ -436,13 +436,13 @@ namespace Hacks {
 
         if (transformData.transform_array && transformData.transform_indices) {
             result =
-                Memory::ReadValue<__m128>(Global::pMemoryInterface, transformData.transform_array + (uint64_t)0x30 * index);
+                Memory::ReadValue<__m128>(Global::pMemoryInterface, transformData.transform_array + (uintptr_t)0x30 * index);
             int transformIndex =
-                Memory::ReadValue<int>(Global::pMemoryInterface, transformData.transform_indices + (uint64_t)0x4 * index);
+                Memory::ReadValue<int>(Global::pMemoryInterface, transformData.transform_indices + (uintptr_t)0x4 * index);
             int pSafe = 0;
             while (transformIndex >= 0 && pSafe++ < 200) {
                 matrix34_t matrix34 = Memory::ReadValue<matrix34_t>(
-                    Global::pMemoryInterface, transformData.transform_array + (uint64_t)0x30 * transformIndex);
+                    Global::pMemoryInterface, transformData.transform_array + (uintptr_t)0x30 * transformIndex);
 
                 __m128 xxxx = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0x00));  // xxxx
                 __m128 yyyy = _mm_castsi128_ps(_mm_shuffle_epi32(*(__m128i*)(&matrix34.vec1), 0x55));  // yyyy
@@ -466,7 +466,7 @@ namespace Hacks {
                     *(__m128*)(&matrix34.vec0));
 
                 transformIndex = Memory::ReadValue<int>(Global::pMemoryInterface,
-                    transformData.transform_indices + (uint64_t)0x4 * transformIndex);
+                    transformData.transform_indices + (uintptr_t)0x4 * transformIndex);
             }
         }
 

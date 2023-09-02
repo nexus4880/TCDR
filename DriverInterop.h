@@ -10,9 +10,9 @@ public:
     ~DriverInterop();
 
     bool UpdateProcessId(const wchar_t* processName);
-    bool ReadRaw(uint64_t address, void* pBuffer, unsigned long size);
-    bool WriteRaw(uint64_t address, void* pBuffer, unsigned long size);
-    uint64_t GetModuleBase();
+    bool ReadRaw(uintptr_t address, void* pBuffer, unsigned long size);
+    bool WriteRaw(uintptr_t address, void* pBuffer, unsigned long size);
+    uintptr_t GetModuleBase();
 
 private:
     void* handle;

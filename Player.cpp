@@ -6,7 +6,7 @@
 #include "Offsets.hpp"
 #include "Hacks.hpp"
 
-Player::Player(uint64_t address) :
+Player::Player(uintptr_t address) :
 	address(address), cachedEFTPlayerClassAddress(0),
 	cachedTransformAddress(0)
 {
@@ -15,7 +15,7 @@ Player::Player(uint64_t address) :
 ProfileInfo Player::GetProfileInfo() {
 	if (!this->cachedProfileInfo.has_value()) {
 		this->cachedProfileInfo = ProfileInfo{
-			Memory::ReadChain<uint64_t>(
+			Memory::ReadChain<uintptr_t>(
 				Global::pMemoryInterface,
 				this->address,
 				{0x520, 0x28}
@@ -26,9 +26,9 @@ ProfileInfo Player::GetProfileInfo() {
 	return this->cachedProfileInfo.value();
 }
 
-uint64_t Player::GetSkeletonTransformListValues() {
+uintptr_t Player::GetSkeletonTransformListValues() {
 	if (!this->cachedEFTPlayerClassAddress) {
-		this->cachedEFTPlayerClassAddress = Memory::ReadChain<uint64_t>(
+		this->cachedEFTPlayerClassAddress = Memory::ReadChain<uintptr_t>(
 			Global::pMemoryInterface,
 			this->address,
 			{ 0xA8, 0x28, 0x28, 0x10 }
@@ -41,7 +41,7 @@ uint64_t Player::GetSkeletonTransformListValues() {
 
 Vector3 Player::GetPosition() {
 	if (!this->cachedTransformAddress) {
-		this->cachedTransformAddress = Memory::ReadChain<uint64_t>(
+		this->cachedTransformAddress = Memory::ReadChain<uintptr_t>(
 			Global::pMemoryInterface,
 			this->GetSkeletonTransformListValues(),
 			{ 0x20, 0x10 }
@@ -52,12 +52,12 @@ Vector3 Player::GetPosition() {
 }
 
 Vector3 Player::GetBone(EBone bone) {
-	uint64_t boneAddress;
+	uintptr_t boneAddress;
 	if (this->cachedBones.contains(bone)) {
 		boneAddress = this->cachedBones[bone];
 	}
 	else {
-		boneAddress = Memory::ReadValue<uint64_t>(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->GetSkeletonTransformListValues() + 0x20 + bone * 0x8) + 0x10);
+		boneAddress = Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->GetSkeletonTransformListValues() + 0x20 + bone * 0x8) + 0x10);
 		this->cachedBones[bone] = boneAddress;
 	}
 
@@ -132,7 +132,7 @@ Color Player::GetColor(ProfileInfo inRelationTo) {
 InventoryController Player::GetInventoryController() {
 	if (!this->cachedInventoryController.has_value()) {
 		this->cachedInventoryController = InventoryController{
-			Memory::ReadValue<uint64_t>(
+			Memory::ReadValue<uintptr_t>(
 				Global::pMemoryInterface,
 				this->address + Offsets::Player::InventoryController
 			)
@@ -143,5 +143,5 @@ InventoryController Player::GetInventoryController() {
 }
 
 FirearmController Player::GetFirearmController() {
-	return FirearmController{ Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x570) };
+	return FirearmController{ Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x570) };
 }

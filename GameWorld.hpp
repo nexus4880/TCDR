@@ -10,7 +10,7 @@
 
 class GameWorld {
 public:
-	GameWorld(uint64_t address) {
+	GameWorld(uintptr_t address) {
 		this->address = address;
 	}
 
@@ -19,7 +19,7 @@ public:
 	std::vector<Player>& GetPlayers();
 	std::vector<WorldLootItem>& GetLoot();
 
-	uint64_t address;
+	uintptr_t address;
 
 private:
 	std::optional<std::vector<Player>> cachedPlayers = std::nullopt;

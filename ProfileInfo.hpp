@@ -33,7 +33,7 @@ enum EMemberCategory {
 
 class ProfileInfo {
 public:
-	ProfileInfo(uint64_t address) {
+	ProfileInfo(uintptr_t address) {
 		this->address = address;
 	}
 
@@ -47,7 +47,7 @@ public:
 	bool IsBoss();
 	EMemberCategory GetMemberCategory();
 
-	uint64_t address;
+	uintptr_t address;
 
 private:
 	std::optional<unsigned char> cachedSide = std::nullopt;

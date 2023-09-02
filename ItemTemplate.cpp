@@ -4,7 +4,7 @@
 
 std::wstring ItemTemplate::GetId() {
 	if (!this->cachedId.has_value()) {
-		this->cachedId = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x50));
+		this->cachedId = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x50));
 	}
 
 	return this->cachedId.value();

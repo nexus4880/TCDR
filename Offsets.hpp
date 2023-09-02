@@ -4,33 +4,33 @@
 #include <array>
 
 namespace Offsets {
-	extern uint64_t GOM;
+	extern uintptr_t GOM;
 
 	namespace GameObjectManager {
-		extern uint64_t TaggedObjects;
-		extern uint64_t ActiveObjects;
+		extern uintptr_t TaggedObjects;
+		extern uintptr_t ActiveObjects;
 	}
 
 	namespace GameWorld {
-		extern uint64_t RegisteredPlayers;
+		extern uintptr_t RegisteredPlayers;
 	}
 
 	namespace List {
-		extern uint64_t Base;
-		extern uint64_t Count;
-		extern uint64_t FirstEntry;
+		extern uintptr_t Base;
+		extern uintptr_t Count;
+		extern uintptr_t FirstEntry;
 	}
 
 	namespace Player {
-		extern uint64_t InventoryController;
+		extern uintptr_t InventoryController;
 	}
 
 	namespace InventoryController {
-		extern uint64_t InventoryClass;
-		extern uint64_t IsInInventory;
+		extern uintptr_t InventoryClass;
+		extern uintptr_t IsInInventory;
 	}
 
 	namespace InventoryClass {
-		extern uint64_t EquipmentClass;
+		extern uintptr_t EquipmentClass;
 	}
 }

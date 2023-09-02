@@ -9,14 +9,14 @@ public:
 	Slot() : Slot(0) {
 	}
 
-	Slot(uint64_t address) {
+	Slot(uintptr_t address) {
 		this->address = address;
 	}
 
 	Item GetContainedItem();
 	bool IsRequired();
 
-	uint64_t address;
+	uintptr_t address;
 
 private:
 	std::optional<Item> cachedContainedItem = std::nullopt;

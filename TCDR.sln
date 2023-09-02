@@ -7,14 +7,26 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCDR", "TCDR.vcxproj", "{E2
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Release|x64 = Release|x64
+		Debug - Basic|x64 = Debug - Basic|x64
+		Debug - DMA|x64 = Debug - DMA|x64
+		Debug - Driver|x64 = Debug - Driver|x64
+		Release - Basic|x64 = Release - Basic|x64
+		Release - DMA|x64 = Release - DMA|x64
+		Release - Driver|x64 = Release - Driver|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug|x64.ActiveCfg = Debug|x64
-		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug|x64.Build.0 = Debug|x64
-		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release|x64.ActiveCfg = Release|x64
-		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release|x64.Build.0 = Release|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug - Basic|x64.ActiveCfg = Debug - Basic|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug - Basic|x64.Build.0 = Debug - Basic|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug - DMA|x64.ActiveCfg = Debug - DMA|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug - DMA|x64.Build.0 = Debug - DMA|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug - Driver|x64.ActiveCfg = Debug - Driver|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Debug - Driver|x64.Build.0 = Debug - Driver|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release - Basic|x64.ActiveCfg = Release - Basic|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release - Basic|x64.Build.0 = Release - Basic|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release - DMA|x64.ActiveCfg = Release - DMA|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release - DMA|x64.Build.0 = Release - DMA|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release - Driver|x64.ActiveCfg = Release - Driver|x64
+		{E2BF3B0E-DEB6-4D91-8EB4-FB48168C7015}.Release - Driver|x64.Build.0 = Release - Driver|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

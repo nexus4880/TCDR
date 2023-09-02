@@ -17,14 +17,14 @@ __interface IMemoryInterface
 {
 public:
     bool UpdateProcessId(const wchar_t* processName);
-    bool ReadRaw(uint64_t address, void* pBuffer, unsigned long size);
-    bool WriteRaw(uint64_t address, void* pBuffer, unsigned long size);
-    uint64_t GetModuleBase();
+    bool ReadRaw(uintptr_t address, void* pBuffer, unsigned long size);
+    bool WriteRaw(uintptr_t address, void* pBuffer, unsigned long size);
+    uintptr_t GetModuleBase();
 };
 
 namespace Memory {
     template <typename T>
-    bool Read(IMemoryInterface* pMemoryInterface, uint64_t address, T* data) {
+    bool Read(IMemoryInterface* pMemoryInterface, uintptr_t address, T* data) {
         if (!address) {
             return false;
         }
@@ -33,7 +33,7 @@ namespace Memory {
     }
 
     template <typename T>
-    T ReadValue(IMemoryInterface* pMemoryInterface, uint64_t address) {
+    T ReadValue(IMemoryInterface* pMemoryInterface, uintptr_t address) {
         T t{};
         if (!address) {
             return t;
@@ -44,7 +44,7 @@ namespace Memory {
     }
 
     template <typename T>
-    T ReadChain(IMemoryInterface* pMemoryInterface, uint64_t baseAddress, std::vector<uint64_t> chain) {
+    T ReadChain(IMemoryInterface* pMemoryInterface, uintptr_t baseAddress, std::vector<uintptr_t> chain) {
         T result{};
         size_t chainSize = chain.size();
         if (chainSize <= 1) {
@@ -53,7 +53,7 @@ namespace Memory {
 
         for (size_t i = 0; i < chainSize; i++) {
             if (i != chainSize - 1) {
-                baseAddress = Memory::ReadValue<uint64_t>(pMemoryInterface, baseAddress + chain[i]);
+                baseAddress = Memory::ReadValue<uintptr_t>(pMemoryInterface, baseAddress + chain[i]);
             }
             else {
                 pMemoryInterface->ReadRaw(baseAddress + chain[i], &result, sizeof(T));
@@ -64,21 +64,21 @@ namespace Memory {
     }
 
     template <typename T>
-    bool Write(IMemoryInterface* pMemoryInterface, uint64_t address, const T& data) {
+    bool Write(IMemoryInterface* pMemoryInterface, uintptr_t address, const T& data) {
         return pMemoryInterface->WriteRaw(address, (void*)&data, sizeof(T));
     }
 
     template <typename T>
-    std::vector<T> ReadList(IMemoryInterface* pMemoryInterface, uint64_t address) {
+    std::vector<T> ReadList(IMemoryInterface* pMemoryInterface, uintptr_t address) {
         int length = Memory::ReadValue<int>(pMemoryInterface, address + 0x18);
         std::vector<T> result{};
-        if (length <= 0) {
+        if (length <= 0 || length > 255) {
             return result;
         }
 
         result.reserve(length);
         T* buffer = new T[length];
-        pMemoryInterface->ReadRaw(Memory::ReadValue<uint64_t>(pMemoryInterface, address + 0x10) + 0x20, buffer, sizeof(T) * length);
+        pMemoryInterface->ReadRaw(Memory::ReadValue<uintptr_t>(pMemoryInterface, address + 0x10) + 0x20, buffer, sizeof(T) * length);
         for (int i = 0; i < length; i++) {
             result.push_back(buffer[i]);
         }
@@ -88,5 +88,5 @@ namespace Memory {
         return result;
     }
 
-    std::wstring ReadString(IMemoryInterface* pMemoryInterface, uint64_t address, bool sanitize = true);
+    std::wstring ReadString(IMemoryInterface* pMemoryInterface, uintptr_t address, bool sanitize = true);
 }

@@ -20,7 +20,7 @@ int ProfileInfo::GetRegistrationDate() {
 
 std::wstring ProfileInfo::GetNickname() {
 	if (!this->cachedNickname.has_value()) {
-		this->cachedNickname = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x10));
+		this->cachedNickname = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x10));
 	}
 
 	return this->cachedNickname.value();
@@ -28,7 +28,7 @@ std::wstring ProfileInfo::GetNickname() {
 
 std::wstring ProfileInfo::GetGroupID() {
 	if (!this->cachedGroupID.has_value()) {
-		this->cachedGroupID = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x20));
+		this->cachedGroupID = Memory::ReadString(Global::pMemoryInterface, Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x20));
 	}
 
 	return this->cachedGroupID.value();
@@ -54,7 +54,7 @@ std::wstring ProfileInfo::GetGroupHash() {
 
 ProfileSettings ProfileInfo::GetSettings() {
 	if (!this->cachedProfileSettings.has_value()) {
-		this->cachedProfileSettings = ProfileSettings{Memory::ReadValue<uint64_t>(Global::pMemoryInterface, this->address + 0x50)};
+		this->cachedProfileSettings = ProfileSettings{Memory::ReadValue<uintptr_t>(Global::pMemoryInterface, this->address + 0x50)};
 	}
 
 	return this->cachedProfileSettings.value();

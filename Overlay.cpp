@@ -41,8 +41,8 @@ Overlay::~Overlay() {
 
 void Overlay::Update() {
 	bool isHomePressed = IsWindowFocused() ?
-		IsKeyPressed(KeyboardKey::KEY_HOME) :
-		WinWrapper::WGetAsyncKeyState(0x24) & 1;
+		IsKeyPressed(KeyboardKey::KEY_INSERT) :
+		WinWrapper::WGetAsyncKeyState(0x2D) & 1;
 	if (isHomePressed) {
 		this->isMenuOpen = !this->isMenuOpen;
 		if (this->isMenuOpen) {

@@ -3,7 +3,7 @@
 #include <numbers>
 
 struct BaseObject {
-	uint64_t previousObjectLink;
-	uint64_t nextObjectLink;
-	uint64_t object;
+	uintptr_t previousObjectLink;
+	uintptr_t nextObjectLink;
+	uintptr_t object;
 };

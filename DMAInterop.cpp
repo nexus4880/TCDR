@@ -1,3 +1,5 @@
+#ifdef MEMORY_INTERFACE_DMA
+
 #include "DMAInterop.hpp"
 #include <stdexcept>
 #include "vmmdll.h"
@@ -20,17 +22,19 @@ bool DMAInterop::UpdateProcessId(const wchar_t* processName) {
 		return true;
 	}
 
-	return VMMDLL_PidGetFromName((VMM_HANDLE)m_handle, "EscapeFromTarkov.exe", (PDWORD)&m_pid) == 1;
+	return VMMDLL_PidGetFromName((VMM_HANDLE)m_handle, "EscapeFromTarkov.exe", (PDWORD)&m_pid) != 0;
 }
 
-bool DMAInterop::ReadRaw(uint64_t address, void* pBuffer, unsigned long size) {
-	return VMMDLL_MemRead((VMM_HANDLE)m_handle, (DWORD)m_pid, address, static_cast<PBYTE>(pBuffer), size) == 1;
+bool DMAInterop::ReadRaw(uintptr_t address, void* pBuffer, unsigned long size) {
+	return VMMDLL_MemRead((VMM_HANDLE)m_handle, (DWORD)m_pid, address, static_cast<PBYTE>(pBuffer), size) != 0;
 }
 
-bool DMAInterop::WriteRaw(uint64_t address, void* pBuffer, unsigned long size) {
-	return VMMDLL_MemWrite((VMM_HANDLE)m_handle, (DWORD)m_pid, address, static_cast<PBYTE>(pBuffer), size) == 1;
+bool DMAInterop::WriteRaw(uintptr_t address, void* pBuffer, unsigned long size) {
+	return VMMDLL_MemWrite((VMM_HANDLE)m_handle, (DWORD)m_pid, address, static_cast<PBYTE>(pBuffer), size) != 0;
 }
 
-uint64_t DMAInterop::GetModuleBase() {
+uintptr_t DMAInterop::GetModuleBase() {
 	return VMMDLL_ProcessGetModuleBase((VMM_HANDLE)m_handle, (DWORD)m_pid, L"UnityPlayer.dll");
 }
+
+#endif

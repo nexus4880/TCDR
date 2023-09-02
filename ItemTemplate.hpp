@@ -6,14 +6,14 @@
 
 class ItemTemplate {
 public:
-	ItemTemplate(uint64_t address) {
+	ItemTemplate(uintptr_t address) {
 		this->address = address;
 	}
 
 	std::wstring GetId();
 	std::wstring GetLocalizedName();
 
-	uint64_t address;
+	uintptr_t address;
 
 private:
 	std::optional<std::wstring> cachedId;
